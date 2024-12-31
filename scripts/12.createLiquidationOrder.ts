@@ -42,7 +42,7 @@ async function executeLiquidationOrder() {
         account: account,
         market: marketTokenAddress,
         collateral_token: eth,
-        is_long: true,
+        is_long: false,
     }
 
     // const keys = await dataStoreContract.get_account_position_keys(account, 0, 1000n);

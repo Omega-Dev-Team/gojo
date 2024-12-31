@@ -16,7 +16,7 @@ async function deploy() {
     const privateKey0: string = process.env.ACCOUNT_PRIVATE as string
     const account0Address: string = process.env.ACCOUNT_PUBLIC as string
     // const tedAccountAddress: string = '0x07D0de127e7636bE507Be8f5EaC675aBa819E12E4c2320FF6e55DF693F9085d4';
-    const tedAccountAddress: string = '0x07D0de127e7636bE507Be8f5EaC675aBa819E12E4c2320FF6e55DF693F9085d4';
+    const tedAccountAddress: string = '0x048b7fa2d7519EAd304594B4006CbaAEAf3D3CE34B7c7E88a20939d953679521';
     const account0 = new Account(provider, account0Address!, privateKey0!)
 
     const grantRoleCalls: Array<{ contractAddress: string, entrypoint: string, calldata: any[] }> = [

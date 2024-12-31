@@ -3,6 +3,7 @@ import fs from 'fs'
 import dotenv from 'dotenv'
 import path from 'path';
 import { tryInvoke } from "./constants/utils";
+import { dataStoreContract, orderHandlerContract } from "./utils/contracts";
 
 const contractAddressesPath = path.join(__dirname, 'constants', 'contractAddresses.json');
 const contractAddresses = JSON.parse(fs.readFileSync(contractAddressesPath, 'utf8'));
@@ -30,14 +31,12 @@ async function getDataStoreContract() {
 
 // Read account order keys count
 export async function getAccountOrderCount(accountAddress: string) {
-    const dataStoreContract = await getDataStoreContract();
     const accountOrderCount = await dataStoreContract.get_account_order_count(accountAddress);
     return Number(accountOrderCount);
 }
 
 // Get all account order keys
 export async function getAccountOrderKeys(accountAddress: string) {
-    const dataStoreContract = await getDataStoreContract();
     const accountOrderCount = await getAccountOrderCount(accountAddress);
     console.log("Account Order Count:", accountOrderCount)
     const accountOrderKeys = await dataStoreContract.get_account_order_keys(accountAddress, 0, Number(accountOrderCount));
@@ -55,26 +54,9 @@ async function execute_ordeer() {
     const key = await getAccountLatestOrderKeys("0x06774e2c4fde12cc5a161fe2a717d3d7f43129d5ae388faaf52a2fb104bfd686");
     console.log("🚀 ~ execute_ordeer ~ key:", key)
 
-    const compiledOrderHandlerSierra = json.parse(fs.readFileSync("./target/dev/satoru_OrderHandler.contract_class.json").toString("ascii"))
 
-    const orderHandlerContract = new Contract(compiledOrderHandlerSierra.abi, contractAddresses['OrderHandler'] as string, provider);
 
-    const compiledRoleStoreSierra = json.parse(fs.readFileSync("./target/dev/satoru_RoleStore.contract_class.json").toString("ascii"))
-    const roleStoreContract = new Contract(compiledRoleStoreSierra.abi, contractAddresses['RoleStore'] as string, provider)
-    roleStoreContract.connect(account0);
 
-    // const compiledDataStoreSierra = json.parse(fs.readFileSync( "./target/dev/satoru_DataStore.contract_class.json").toString( "ascii"))
-    // const dataStoreContract = new Contract(compiledDataStoreSierra.abi, contractAddresses.DataStore as string, provider)
-    // dataStoreContract.connect(account0)
-    // const dataCall8 = dataStoreContract.populate(
-    //     "remove_position",
-    //     [
-    //         "0x5985ad845114a848d9cffdf9124a029e1d3fe1e704ed8230e42872f80f88cd1",
-    //         "0x4eaaccd6d2a2d9d1c0404cd2fea8485d62b437415948309736fdfd2542aee3"
-    //     ]
-    // )
-    // const setAddressTx8 = await dataStoreContract.remove_position(dataCall8.calldata)
-    // await provider.waitForTransaction(setAddressTx8.transaction_hash)
 
     const current_block = await provider.getBlockNumber();
     const current_block_data = await provider.getBlock(current_block);
@@ -88,9 +70,9 @@ async function execute_ordeer() {
         compacted_max_oracle_block_numbers: [block1, block1, block1],
         compacted_oracle_timestamps: [current_block_data.timestamp, current_block_data.timestamp, current_block_data.timestamp],
         compacted_decimals: [18, 6],
-        compacted_min_prices: [3390.1 * 1e12, 1 * 1e24, 1 * 1e24], // 500000, 10000 compacted
+        compacted_min_prices: [3339.1 * 1e12, 1 * 1e24, 1 * 1e24], // 500000, 10000 compacted
         compacted_min_prices_indexes: [0],
-        compacted_max_prices: [3390.1 * 1e12, 1 * 1e24, 1 * 1e24], // 500000, 10000 compacted
+        compacted_max_prices: [3339.1 * 1e12, 1 * 1e24, 1 * 1e24], // 500000, 10000 compacted
         compacted_max_prices_indexes: [0],
         signatures: [
             ['signatures1', 'signatures2'], ['signatures1', 'signatures2']
