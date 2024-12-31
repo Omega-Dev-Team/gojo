@@ -1,0 +1,31 @@
+[package]
+name = "satoru"
+version = "0.1.0"
+authors = ["Abdelhamid Bakhta <@abdelhamidbakhta>"]
+license = "MIT"
+keywords = ["starknet", "defi", "syntethics"]
+description = "Synthetics platform for Starknet, inspired by GMX v2 design."
+documentation = "https://keep-starknet-strange.github.io/satoru/"
+homepage = "https://keep-starknet-strange.github.io/satoru/"
+repository = "https://github.com/keep-starknet-strange/satoru"
+
+[[target.starknet-contract]]
+sierra = true
+casm = true
+allowed-libfuncs-list.name = "experimental"
+
+[cairo]
+sierra-replace-ids = true
+
+[dependencies]
+starknet = ">=2.3.0"
+alexandria_data_structures = { git = "https://github.com/keep-starknet-strange/alexandria.git", tag = "cairo-v2.3.0-rc0" }
+alexandria_math = { git = "https://github.com/keep-starknet-strange/alexandria.git", tag = "cairo-v2.3.0-rc0" }
+alexandria_storage = { git = "https://github.com/keep-starknet-strange/alexandria.git", tag = "cairo-v2.3.0-rc0" }
+alexandria_sorting = { git = "https://github.com/keep-starknet-strange/alexandria.git", tag = "cairo-v2.3.0-rc0" }
+snforge_std = { git = "https://github.com/foundry-rs/starknet-foundry.git", tag = "v0.9.1" }
+pragma_lib = { git = "https://github.com/astraly-labs/pragma-lib" }
+
+
+[tool.snforge]
+exit_first = false

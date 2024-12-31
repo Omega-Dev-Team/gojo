@@ -1,0 +1,36 @@
+{
+	"scripts": {
+		"1": "ts-node ./scripts/1.deployApp.ts",
+		"2": "ts-node ./scripts/2.grantRoles.ts",
+		"3": "ts-node ./scripts/3.createMarket.ts",
+		"4": "ts-node ./scripts/4.configMarket.ts",
+		"5": "ts-node ./scripts/5.createDeposit.ts",
+		"6": "ts-node ./scripts/6.executeDeposit.ts",
+		"7": "ts-node ./scripts/7.createLongOrder.ts",
+		"8": "ts-node ./scripts/8.executeLongOrder.ts",
+		"9": "ts-node ./scripts/9.createWithdrawal.ts",
+		"10": "ts-node ./scripts/10.executeWithdrawal.ts",
+		"11": "ts-node ./scripts/11.cancelOrder.ts",
+		"12": "ts-node ./scripts/12.createLiquidationOrder.ts",
+		"13": "ts-node ./scripts/13.removeAllOrders.ts",
+		"funding-fee": "ts-node ./scripts/funding-fee.ts",
+		"execution-fee": "ts-node ./scripts/execution-fee",
+		"ui-fee": "ts-node ./scripts/ui-fee",
+		"deployTokens": "ts-node ./scripts/deployERC20tokens",
+		"testGetStorageSlot": "ts-node ./scripts/testGetStorageSlot",
+		"getMarketData": "ts-node ./scripts/getMarketData",
+		"noDeployFlow": "ts-node ./scripts/5.createDeposit.ts && sleep 120 && ts-node ./scripts/6.executeDeposit.ts && sleep 30 && ts-node ./scripts/7.createLongOrder.ts && ts-node ./scripts/8.executeLongOrder.ts",
+		"fullDeployFlow": "ts-node ./scripts/1.deployApp.ts && sleep 30 && ts-node ./scripts/2.grantRoles.ts && sleep 30 && ts-node ./scripts/3.createMarket.ts && sleep 30 && ts-node ./scripts/4.configMarket.ts && sleep 30 && ts-node ./scripts/5.createDeposit.ts && sleep 120 && ts-node ./scripts/6.executeDeposit.ts && sleep 30 && ts-node ./scripts/7.createLongOrder.ts && sleep 30 && ts-node ./scripts/8.executeLongOrder.ts",
+		"customFlow": "ts-node ./scripts/1.deployApp.ts && sleep 30 && ts-node ./scripts/2.grantRoles.ts && sleep 30 && ts-node ./scripts/3.createMarket.ts && sleep 30 && ts-node ./scripts/4.configMarket.ts && sleep 30 && ts-node ./scripts/5.createDeposit.ts && sleep 120 && ts-node ./scripts/6.executeDeposit.ts"
+
+	},
+	"dependencies": {
+		"@types/node": "^20.11.16",
+		"dotenv": "^16.4.5",
+		"ethers": "5",
+		"fs": "^0.0.1-security",
+		"starknet": "^6.11.0",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.3.3"
+	}
+}

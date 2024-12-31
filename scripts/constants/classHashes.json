@@ -1,0 +1,7 @@
+{
+    "IncreaseOrderUtils": "0x3846d911d2952677ce44ffd77e96abb4338a6db228330209c10e59fd33d196a",
+    "DecreaseOrderUtils": "0x387a4b919f878e30075f6074521f44ae4f1f2478fd2ea7dbbce469aded32809",
+    "SwapOrderUtils": "0x25e5f413474ff943baebd2b662a4f7ddbc846cfaa225d655e65be3a395c16a7",
+    "OrderUtils": "0x1b928df76038301bd452ef0d11e539ea8314cf967fb0b8b865c46246606c2ea",
+    "MarketToken": "0x000fde0fcfc7e22faeb692a80c3f34eec1a26641ce045f08d0e136abf934135a"
+}
