@@ -108,7 +108,7 @@ export const markets_config = {
     maxShortTokenPoolAmount: expandDecimals(8_000_000_000, 6),
 
     maxLongTokenPoolAmountForDeposit: expandDecimals(2_000, 18), // Max deposit for each user
-    maxShortTokenPoolAmountForDeposit: expandDecimals(10_000, 6), // Max deposit for each user
+    maxShortTokenPoolAmountForDeposit: expandDecimals(100_000, 6), // Max deposit for each user
 
     negativePositionImpactFactor: decimalToFloat(15, 4), // 0.015%
     positivePositionImpactFactor: decimalToFloat(9, 4), // 0.09%
@@ -118,8 +118,8 @@ export const markets_config = {
     positionImpactPoolAmount: expandDecimals(0, 0), // Error: INVALID_POOL_VALUE_FOR_DEPOSIT
 
     //#region Swap fee config
-    swapFeeFactorForPositiveImpact: decimalToFloat(5, 3), // 0.05%,
-    swapFeeFactorForNegativeImpact: decimalToFloat(7, 3), // 0.07%,
+    swapFeeFactorForPositiveImpact: decimalToFloat(7, 4), // 0.07%,
+    swapFeeFactorForNegativeImpact: decimalToFloat(11, 4), // 0.11%, // Buy, Sell Fee
   
     negativeSwapImpactFactor: decimalToFloat(1, 5), // 0.001%
     positiveSwapImpactFactor: decimalToFloat(5, 6), // 0.0005%

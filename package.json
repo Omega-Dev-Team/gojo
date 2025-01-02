@@ -22,15 +22,16 @@
 		"noDeployFlow": "ts-node ./scripts/5.createDeposit.ts && sleep 120 && ts-node ./scripts/6.executeDeposit.ts && sleep 30 && ts-node ./scripts/7.createLongOrder.ts && ts-node ./scripts/8.executeLongOrder.ts",
 		"fullDeployFlow": "ts-node ./scripts/1.deployApp.ts && sleep 30 && ts-node ./scripts/2.grantRoles.ts && sleep 30 && ts-node ./scripts/3.createMarket.ts && sleep 30 && ts-node ./scripts/4.configMarket.ts && sleep 30 && ts-node ./scripts/5.createDeposit.ts && sleep 120 && ts-node ./scripts/6.executeDeposit.ts && sleep 30 && ts-node ./scripts/7.createLongOrder.ts && sleep 30 && ts-node ./scripts/8.executeLongOrder.ts",
 		"customFlow": "ts-node ./scripts/1.deployApp.ts && sleep 30 && ts-node ./scripts/2.grantRoles.ts && sleep 30 && ts-node ./scripts/3.createMarket.ts && sleep 30 && ts-node ./scripts/4.configMarket.ts && sleep 30 && ts-node ./scripts/5.createDeposit.ts && sleep 120 && ts-node ./scripts/6.executeDeposit.ts"
-
 	},
 	"dependencies": {
-		"@types/node": "^20.11.16",
 		"dotenv": "^16.4.5",
 		"ethers": "5",
 		"fs": "^0.0.1-security",
 		"starknet": "^6.11.0",
-		"ts-node": "^10.9.2",
 		"typescript": "^5.3.3"
+	},
+	"devDependencies": {
+		"@types/node": "^22.10.3",
+		"ts-node": "^10.9.2"
 	}
 }

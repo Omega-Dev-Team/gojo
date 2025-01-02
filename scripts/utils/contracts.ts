@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import dotenv from 'dotenv';
 import { RpcProvider, Account, Contract, json, cairo } from 'starknet';
-import {  DataStoreABI,LiquidationHandlerABI, OrderHandlerABI } from "./abis"
+import {  DataStoreABI,LiquidationHandlerABI, OrderHandlerABI, DepositHandlerABI } from "./abis"
 
 const contractAddressesPath = path.join(__dirname, '../constants', 'contractAddresses.json');
 const contractAddresses = JSON.parse(fs.readFileSync(contractAddressesPath, 'utf8'));
@@ -26,6 +26,8 @@ const readerAddress = contractAddresses['Reader'];
 const dataStoreAddress = contractAddresses['DataStore'];
 const liquidationHandlerAddress = contractAddresses['LiquidationHandler'];
 const orderHandlerAddress = contractAddresses['OrderHandler'];
+const depositHandlerAddress = contractAddresses['DepositHandler'];
+const withdrawalHandlerAddress = contractAddresses['WithdrawalHandler'];
 
 const compiledReaderSierra = json.parse(fs.readFileSync("./target/dev/satoru_Reader.contract_class.json").toString("ascii"));
 const readerContract = new Contract(compiledReaderSierra.abi, readerAddress, provider);
@@ -37,7 +39,12 @@ const dataStoreContract = new Contract(DataStoreABI, dataStoreAddress, provider)
 const liquidationHandlerContract = new Contract(LiquidationHandlerABI, liquidationHandlerAddress, provider).typedv2(LiquidationHandlerABI);
 
 // const compiledOrderHandlerSierra = json.parse(fs.readFileSync("./target/dev/satoru_OrderHandler.contract_class.json").toString("ascii"));
-const orderHandlerContract = new Contract(OrderHandlerABI, orderHandlerAddress, provider)
+const orderHandlerContract = new Contract(OrderHandlerABI, orderHandlerAddress, provider);
+
+const depositHandlerContract = new Contract(DepositHandlerABI, depositHandlerAddress, provider);
+
+const withdrawalHandlerContract = new Contract(DepositHandlerABI, withdrawalHandlerAddress, provider);
+
 
 orderHandlerContract.connect(account0);
 
@@ -46,6 +53,8 @@ export {
     dataStoreContract,
     liquidationHandlerContract,
     orderHandlerContract,
+    depositHandlerContract,
+    withdrawalHandlerContract,
 
     contractAddresses,
     account0,
