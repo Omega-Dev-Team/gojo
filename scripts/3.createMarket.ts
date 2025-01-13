@@ -1,11 +1,10 @@
 import { Account, Contract, json, Calldata, CallData, RpcProvider, shortString, uint256, CairoCustomEnum, ec } from "starknet"
 import fs from 'fs'
 import dotenv from 'dotenv'
-import path from 'path';
-import { tryInvoke } from "./constants/utils";
 import { contractAddresses } from "./utils/contracts";
+import { getContractPath } from "./utils/get-contract-addresses";
 
-const contractAddressesPath = path.join(__dirname, 'constants', 'contractAddresses.json');
+const contractAddressesPath = getContractPath();
 
 const ETH = contractAddresses['ETH'];
 const BTC = contractAddresses['BTC'];

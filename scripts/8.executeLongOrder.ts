@@ -4,9 +4,10 @@ import dotenv from 'dotenv'
 import path from 'path';
 import { tryInvoke } from "./constants/utils";
 import { dataStoreContract, orderHandlerContract } from "./utils/contracts";
+import { getContractAddresses } from "./utils/get-contract-addresses";
 
-const contractAddressesPath = path.join(__dirname, 'constants', 'contractAddresses.json');
-const contractAddresses = JSON.parse(fs.readFileSync(contractAddressesPath, 'utf8'));
+
+const contractAddresses = getContractAddresses();
 const ETH = contractAddresses['ETH'];
 const BTC = contractAddresses['BTC'];
 const USDT = contractAddresses['USDT'];
@@ -70,9 +71,9 @@ async function execute_ordeer() {
         compacted_max_oracle_block_numbers: [block1, block1, block1],
         compacted_oracle_timestamps: [current_block_data.timestamp, current_block_data.timestamp, current_block_data.timestamp],
         compacted_decimals: [18, 6],
-        compacted_min_prices: [3339.1 * 1e12, 1 * 1e24, 1 * 1e24], // 500000, 10000 compacted
+        compacted_min_prices: [3272.1 * 1e12, 1 * 1e24, 1 * 1e24], // 500000, 10000 compacted
         compacted_min_prices_indexes: [0],
-        compacted_max_prices: [3339.1 * 1e12, 1 * 1e24, 1 * 1e24], // 500000, 10000 compacted
+        compacted_max_prices: [3272.1 * 1e12, 1 * 1e24, 1 * 1e24], // 500000, 10000 compacted
         compacted_max_prices_indexes: [0],
         signatures: [
             ['signatures1', 'signatures2'], ['signatures1', 'signatures2']

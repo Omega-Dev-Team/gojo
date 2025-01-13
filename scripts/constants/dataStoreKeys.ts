@@ -93,8 +93,12 @@ export const ESTIMATED_GAS_FEE_BASE_AMOUNT = hashSingleString("EST_GAS_FEE_BASE_
 export const ESTIMATED_GAS_FEE_MULTIPLIER_FACTOR = hashSingleString("EST_GAS_FEE_MULT_FACT");
 export const ACCOUNT_POSITION_LIST_KEY = hashSingleString("ACCOUNT_POSITION_LIST");
 export const ACCOUNT_ORDER_LIST_KEY = hashSingleString("ACCOUNT_ORDER_LIST");
+
 export const VIRTUAL_TOKEN_ID_KEY = hashSingleString("VIRTUAL_TOKEN_ID");
 export const VIRTUAL_MARKET_ID_KEY = hashSingleString("VIRTUAL_MARKET_ID");
+export const VIRTUAL_INVENTORY_FOR_SWAPS = hashSingleString("VIRT_INV_FOR_SWAPS");
+export const VIRTUAL_INVENTORY_FOR_POSITIONS = hashSingleString("VIRT_INV_FOR_POSITIONS");
+
 export const POOL_AMOUNT_ADJUSTMENT_KEY = hashSingleString("POOL_AMOUNT_ADJUSTMENT");
 export const AFFILIATE_REWARD_KEY = hashSingleString("AFFILIATE_REWARD");
 export const IS_MARKET_DISABLED_KEY = hashSingleString("IS_MARKET_DISABLED");
@@ -315,6 +319,14 @@ export function virtualTokenIdKey(token: string) {
 
 export function virtualMarketIdKey(market: string) {
   return hashManyString([VIRTUAL_MARKET_ID_KEY, market]);
+}
+
+export function virtualInventoryForSwapsKey(virtualMarketId: string, isLongToken: boolean) {
+  return hashManyString([VIRTUAL_INVENTORY_FOR_SWAPS, virtualMarketId, isLongToken]);
+}
+
+export function virtualInventoryForPositionsKey(virtualTokenId: string) {
+  return hashManyString([VIRTUAL_INVENTORY_FOR_POSITIONS, virtualTokenId]);
 }
 
 export function poolAmountAdjustmentKey(market: string, token: string) {

@@ -2,24 +2,21 @@ import { Account, hash, Contract, json, Calldata, CallData, RpcProvider, shortSt
 import fs from 'fs'
 import path from 'path';
 import dotenv from 'dotenv'
-import { sleep, tryInvoke } from "./constants/utils"
+import { getClassHashPath, getContractPath } from "./utils/get-contract-addresses";
+import { provider, account0 } from "./utils/contracts";
 
-const contractAddressesPath = path.join(__dirname, 'constants', 'contractAddresses.json');
+
+const contractAddressesPath = getContractPath();
 const contractAddresses = JSON.parse(fs.readFileSync(contractAddressesPath, 'utf8'));
 
-const classHashesPath = path.join(__dirname, 'constants', 'classHashes.json');
+const classHashesPath = getClassHashPath();
 const classHashes = JSON.parse(fs.readFileSync(classHashesPath, 'utf8'));
 
 dotenv.config()
 
 async function deploy() {
     // connect provider
-    const providerUrl = process.env.PROVIDER_URL
-    const provider = new RpcProvider({ nodeUrl: providerUrl! })
-    // connect your account. To adapt to your own account :
-    const privateKey0: string = process.env.ACCOUNT_PRIVATE as string
-    const account0Address: string = process.env.ACCOUNT_PUBLIC as string
-    const account0 = new Account(provider, account0Address!, privateKey0!)
+
     console.log("Deploying contracts...")
     const resp = await provider.getSpecVersion();
 
@@ -181,6 +178,7 @@ async function deploy() {
         const deployDecreaseOrderUtilsResponse = await account0.declareAndDeploy({
             contract: compiledDecreaseOrderUtilsSierra,
             casm: compiledDecreaseOrderUtilsCasm,
+              constructorCalldata: decreaseOrderUtilsConstructor,
         })
 
         contractAddresses.DecreaseOrderUtils = deployDecreaseOrderUtilsResponse.deploy.contract_address;

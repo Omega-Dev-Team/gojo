@@ -1,51 +1,31 @@
-import { Account, AllowArray, Call, Contract, num, RpcProvider } from "starknet";
+import { num } from "starknet";
 import * as dataStoreKeys from "./constants/dataStoreKeys";
 import { markets_config } from "./constants/market-config-data";
-import dotenv from 'dotenv'
-import fs from 'fs'
-import path from 'path';
 import { tryInvoke } from "./constants/utils";
+import { getContractAddresses } from "./utils/get-contract-addresses";
+import { dataStoreContract, readerContract } from "./utils/contracts";
 
-const contractAddressesPath = path.join(__dirname, 'constants', 'contractAddresses.json');
-const contractAddresses = JSON.parse(fs.readFileSync(contractAddressesPath, 'utf8'));
 
-dotenv.config()
+const contractAddresses = getContractAddresses();
+console.log("🚀 ~ contractAddresses:", contractAddresses)
 
-// connect provider
-const providerUrl = process.env.PROVIDER_URL
-const provider = new RpcProvider({ nodeUrl: providerUrl! })
-// connect your account. To adapt to your own account :
-const privateKey0: string = process.env.ACCOUNT_PRIVATE as string
-const account0Address: string = process.env.ACCOUNT_PUBLIC as string
-const account = new Account(provider, account0Address!, privateKey0!)
 
-async function getReaderContract() {
-   // read abi of DataStore contract
-   const { abi: readerAbi } = await account.getClassAt(contractAddresses['Reader']);
-   if (readerAbi === undefined) { throw new Error("no abi.") };
-   const readerContract = new Contract(readerAbi, contractAddresses['Reader'], account);
-   return readerContract;
-}
-
-async function getDataStoreContract() {
-   // read abi of DataStore contract
-   const { abi: dataStoreAbi } = await account.getClassAt(contractAddresses['DataStore']);
-   if (dataStoreAbi === undefined) { throw new Error("no abi.") };
-   const dataStoreContract = new Contract(dataStoreAbi, contractAddresses['DataStore'], account);
-   return dataStoreContract;
-}
 
 /// Create a new market.
 export async function configMarket(marketName: string) {
-   const dataStore = await getDataStoreContract();
-   const reader = await getReaderContract();
-   const market = contractAddresses[marketName];
+   const dataStore = dataStoreContract;
+   const reader = readerContract;
+   const market = contractAddresses[marketName as keyof typeof contractAddresses];
+   if(!market) { 
+      throw new Error(`Market ${marketName} not found in contract`);
+   }
 
    const tokensInMarket = await reader.functions.get_market({
       contract_address: dataStore.address
    }, market);
 
    const index_token = num.toHex(tokensInMarket.index_token);
+   console.log("🚀 ~ configMarket ~ index_token:", index_token)
    const long_token = num.toHex(tokensInMarket.long_token);
    const short_token = num.toHex(tokensInMarket.short_token);
 
@@ -53,17 +33,26 @@ export async function configMarket(marketName: string) {
 
    const configMarketCalls: Array<{ contractAddress: string, entrypoint: string, calldata: any[] }> = [];
 
-   const virtualTokenIdForIndexTokenKey = dataStoreKeys.virtualTokenIdKey(configData.virtualTokenIdForIndexToken);
+   const virtualTokenIdForIndexTokenKey = dataStoreKeys.virtualTokenIdKey(index_token);
    configMarketCalls.push({
       contractAddress: dataStore.address,
       entrypoint: "set_felt252",
       calldata: [virtualTokenIdForIndexTokenKey, configData.virtualTokenIdForIndexToken]
    });
-   const virtualTokenIdForMarketToken = dataStoreKeys.virtualMarketIdKey(configData.virtualTokenIdForIndexToken);
+   
+
+   const virtualTokenIdForShortTokenKey = dataStoreKeys.virtualTokenIdKey(short_token);
    configMarketCalls.push({
       contractAddress: dataStore.address,
       entrypoint: "set_felt252",
-      calldata: [virtualTokenIdForMarketToken, configData.virtualMarketId]
+      calldata: [virtualTokenIdForShortTokenKey, configData.virtualTokenIdForIndexToken]
+   });
+
+   const virtualTokenIdForMarketTokenKey = dataStoreKeys.virtualMarketIdKey(market);
+   configMarketCalls.push({
+      contractAddress: dataStore.address,
+      entrypoint: "set_felt252",
+      calldata: [virtualTokenIdForMarketTokenKey, configData.virtualMarketId]
    });
 
    // positionImpactPoolAmount
@@ -76,7 +65,6 @@ export async function configMarket(marketName: string) {
 
    // minPositionImpactPoolAmount
    const minPositionImpactPoolAmountKey = dataStoreKeys.minPositionImpactPoolAmountKey(market);
-   console.log("🚀 ~ configMarket ~ minPositionImpactPoolAmountKey:", minPositionImpactPoolAmountKey)
    configMarketCalls.push({
       contractAddress: dataStore.address,
       entrypoint: "set_u256",

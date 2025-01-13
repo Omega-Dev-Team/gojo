@@ -1,12 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 import dotenv from 'dotenv';
-import { RpcProvider, Account, Contract, json, cairo } from 'starknet';
-import {  DataStoreABI,LiquidationHandlerABI, OrderHandlerABI, DepositHandlerABI } from "./abis"
+import { RpcProvider, Account, Contract, json } from 'starknet';
+import {  DataStoreABI,LiquidationHandlerABI, OrderHandlerABI, DepositHandlerABI } from "./abis";
+import {  getContractAddresses  } from "./get-contract-addresses";
 
-const contractAddressesPath = path.join(__dirname, '../constants', 'contractAddresses.json');
-const contractAddresses = JSON.parse(fs.readFileSync(contractAddressesPath, 'utf8'));
-
+const contractAddresses = getContractAddresses();
 
 dotenv.config();
 
@@ -32,11 +31,11 @@ const withdrawalHandlerAddress = contractAddresses['WithdrawalHandler'];
 const compiledReaderSierra = json.parse(fs.readFileSync("./target/dev/satoru_Reader.contract_class.json").toString("ascii"));
 const readerContract = new Contract(compiledReaderSierra.abi, readerAddress, provider);
 
-// const compiledDataStoreSierra = json.parse(fs.readFileSync("./target/dev/satoru_DataStore.contract_class.json").toString("ascii"));
-const dataStoreContract = new Contract(DataStoreABI, dataStoreAddress, provider).typedv2(DataStoreABI);
+const compiledDataStoreSierra = json.parse(fs.readFileSync("./target/dev/satoru_DataStore.contract_class.json").toString("ascii"));
+const dataStoreContract = new Contract(compiledDataStoreSierra.abi, dataStoreAddress, provider).typedv2(DataStoreABI);
  
-//const compiledLiquidationHandlerSierra = json.parse(fs.readFileSync("./target/dev/satoru_LiquidationHandler.contract_class.json").toString("ascii"));
-const liquidationHandlerContract = new Contract(LiquidationHandlerABI, liquidationHandlerAddress, provider).typedv2(LiquidationHandlerABI);
+const compiledLiquidationHandlerSierra = json.parse(fs.readFileSync("./target/dev/satoru_LiquidationHandler.contract_class.json").toString("ascii"));
+const liquidationHandlerContract = new Contract(compiledLiquidationHandlerSierra.abi, liquidationHandlerAddress, provider).typedv2(LiquidationHandlerABI);
 
 // const compiledOrderHandlerSierra = json.parse(fs.readFileSync("./target/dev/satoru_OrderHandler.contract_class.json").toString("ascii"));
 const orderHandlerContract = new Contract(OrderHandlerABI, orderHandlerAddress, provider);

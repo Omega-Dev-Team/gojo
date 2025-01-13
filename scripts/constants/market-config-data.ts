@@ -8,11 +8,10 @@ import path from 'path';
 import { hashSingleString } from "./dataStoreKeys";
 import { bigNumberify, expandDecimals, decimalToFloat, exponentToFloat, percentageToFloat,  } from "./utils";
 
-const contractAddressesPath = path.join(__dirname, 'contractAddresses.json');
-const contractAddresses = JSON.parse(fs.readFileSync(contractAddressesPath, 'utf8'));
-const ETH = contractAddresses['ETH'];
-const BTC = contractAddresses['BTC'];
-const USDT = contractAddresses['USDT'];
+import { getContractAddresses } from "../utils/get-contract-addresses";
+
+
+const contractAddresses = getContractAddresses()
 
 dotenv.config()
 
@@ -132,6 +131,7 @@ export const markets_config = {
     minCollateralFactorForOpenInterestMultiplierLong: decimalToFloat(5, 10),
     minCollateralFactorForOpenInterestMultiplierShort: decimalToFloat(2, 10),
 
+    minCollateralUsd: decimalToFloat(2, 0), // 2 USD
 
     reserveFactorLongs: decimalToFloat(1, 0), // 95%,= 0.95, amount of ETH for reserve
     reserveFactorShorts: decimalToFloat(1, 0), // 95%,
@@ -192,10 +192,10 @@ export const markets_config = {
 
     //#region Minimum collateral 
     // minCollateralFactor of 0.01 (1%) when open interest is 50,000,000 USD
-    minCollateralFactor: decimalToFloat(1, 2), // 1%
+    minCollateralFactor: decimalToFloat(5, 2), // 1%
     minCollateralFactorForOpenInterestMultiplierLong: decimalToFloat(5, 10),
     minCollateralFactorForOpenInterestMultiplierShort: decimalToFloat(2, 10),
-
+    minCollateralUsd: decimalToFloat(2, 0), // 2 USD
 
     reserveFactorLongs: decimalToFloat(1, 0), // 95%,= 0.95, amount of ETH for reserve
     reserveFactorShorts: decimalToFloat(1, 0), // 95%,

@@ -1,0 +1,34 @@
+export type ContractAddresses = {
+    UIFeeReceiver: string;
+    Multicall: string;
+    ZeroAddress: string;
+    BTC: string;
+    ETH: string;
+    USDT: string;
+    USDC: string;
+    ETHUSDCMarketToken: string;
+    ETHUSDTMarketToken: string;
+
+    RoleStore: string;
+    DataStore: string;
+    EventEmitter: string;
+    OracleStore: string;
+    Oracle: string;
+    OrderVault: string;
+    ReferralStorage: string;
+    WithdrawalVault: string;
+    MarketFactory: string;
+    Reader: string;
+    Router: string;
+    SwapHandler: string;
+    IncreaseOrderUtils: string;
+    DecreaseOrderUtils: string;
+    SwapOrderUtils: string;
+    OrderUtils: string;
+    OrderHandler: string;
+    DepositVault: string;
+    DepositHandler: string;
+    WithdrawalHandler: string;
+    LiquidationHandler: string;
+    ExchangeRouter: string;
+};
