@@ -209,12 +209,13 @@ fn _swap(params: @SwapParams, _params: @_SwapParams) -> (ContractAddress, u256) 
     cache.token_in_price = (*params.oracle).get_primary_price(*_params.token_in);
     cache.token_out_price = (*params.oracle).get_primary_price(cache.token_out);
 
-    let usd_delta_for_token_felt252: felt252 = (*_params.amount_in
-        * cache.token_out_price.mid_price())
+    let usd_delta_for_token_felt252: u256 = (*_params.amount_in
+        * cache.token_in_price.mid_price())
         .try_into()
         .expect('u256 into felt failed');
 
-    let usd_delta = *_params.amount_in * cache.token_out_price.mid_price();
+    // NOTE(Ted): Following GMX: * with token_in_price instead of token_out_price
+    let usd_delta = *_params.amount_in * cache.token_in_price.mid_price();
     let price_impact_usd = swap_pricing_utils::get_price_impact_usd(
         swap_pricing_utils::GetPriceImpactUsdParams {
             data_store: *params.data_store,
@@ -223,10 +224,11 @@ fn _swap(params: @SwapParams, _params: @_SwapParams) -> (ContractAddress, u256) 
             token_b: cache.token_out,
             price_for_token_a: cache.token_in_price.mid_price(),
             price_for_token_b: cache.token_out_price.mid_price(),
-            usd_delta_for_token_a: calc::to_signed(usd_delta, true),
-            usd_delta_for_token_b: calc::to_signed(usd_delta, false),
+            usd_delta_for_token_a: calc::to_signed(usd_delta_for_token_felt252, true),
+            usd_delta_for_token_b: calc::to_signed(usd_delta_for_token_felt252, false),
         }
     );
+    // let price_impact_usd = Zeroable::zero();
 
     let fees = swap_pricing_utils::get_swap_fees(
         *params.data_store,

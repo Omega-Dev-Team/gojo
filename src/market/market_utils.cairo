@@ -2829,7 +2829,7 @@ fn validate_market_token_balance_with_token(
         .into();
     let expected_min_balance: u256 = get_expected_min_token_balance(data_store, market, token);
     // assert(balance >= expected_min_balance, MarketError::INVALID_MARKET_TOKEN_BALANCE);
-    // NOTE(Ted): Check balance have to less than expected_min_balance 
+    // NOTE(Ted): Check balance have to less than expected_min_balance, MAKE SURE: actual balance is enough for the market
     // Issue with the actual balance, low() is not working. Example: 112.5 is return as 112
     if(balance < expected_min_balance) {
         MarketError::INVALID_MARKET_TOKEN_BALANCE_VALUE(balance, expected_min_balance, token);
