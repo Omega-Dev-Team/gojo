@@ -13,6 +13,7 @@
 		"11": "ts-node ./scripts/11.cancelOrder.ts",
 		"12": "ts-node ./scripts/12.createLiquidationOrder.ts",
 		"13": "ts-node ./scripts/13.removeAllOrders.ts",
+		"14": "ts-node ./scripts/14.updateVirtualInventory.ts",
 		"funding-fee": "ts-node ./scripts/funding-fee.ts",
 		"execution-fee": "ts-node ./scripts/execution-fee",
 		"ui-fee": "ts-node ./scripts/ui-fee",

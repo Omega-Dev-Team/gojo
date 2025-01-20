@@ -53,10 +53,8 @@ export async function getAccountLatestOrderKeys(accountAddress: string) {
 
 async function execute_ordeer() {
     const key = await getAccountLatestOrderKeys("0x06774e2c4fde12cc5a161fe2a717d3d7f43129d5ae388faaf52a2fb104bfd686");
-    console.log("🚀 ~ execute_ordeer ~ key:", key)
-
-
-
+    const position = await dataStoreContract.get_order(key);
+    console.log("🚀 0xted  ~ execute_ordeer ~ position:", position);
 
 
     const current_block = await provider.getBlockNumber();
@@ -71,9 +69,9 @@ async function execute_ordeer() {
         compacted_max_oracle_block_numbers: [block1, block1, block1],
         compacted_oracle_timestamps: [current_block_data.timestamp, current_block_data.timestamp, current_block_data.timestamp],
         compacted_decimals: [18, 6],
-        compacted_min_prices: [3272.1 * 1e12, 1 * 1e24, 1 * 1e24], // 500000, 10000 compacted
+        compacted_min_prices: [3399.1 * 1e12, 1 * 1e24, 1 * 1e24], // 500000, 10000 compacted
         compacted_min_prices_indexes: [0],
-        compacted_max_prices: [3272.1 * 1e12, 1 * 1e24, 1 * 1e24], // 500000, 10000 compacted
+        compacted_max_prices: [3399.1 * 1e12, 1 * 1e24, 1 * 1e24], // 500000, 10000 compacted
         compacted_max_prices_indexes: [0],
         signatures: [
             ['signatures1', 'signatures2'], ['signatures1', 'signatures2']

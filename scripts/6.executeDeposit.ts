@@ -22,10 +22,6 @@ const privateKey0: string = process.env.ACCOUNT_PRIVATE as string
 const account0Address: string = process.env.ACCOUNT_PUBLIC as string
 const account0 = new Account(provider, account0Address!, privateKey0!)
 
-async function getDataStoreContract() {
-    return dataStoreContract;
-}
-
 // Read account deposit keys count
 export async function getAccountDepositCount(accountAddress: string) {
     const accountDepositCount = await dataStoreContract.get_account_deposit_count(accountAddress);
@@ -62,9 +58,9 @@ async function execute_deposit() {
         compacted_max_oracle_block_numbers: [block1, block1, block1],
         compacted_oracle_timestamps: [current_block_data.timestamp, current_block_data.timestamp, current_block_data.timestamp],
         compacted_decimals: [18, 6, 6],
-        compacted_min_prices: [3275.95 * 1e12, 1 * 1e24, 1 * 1e24], // 500000, 10000 compacted
+        compacted_min_prices: [3066.95 * 1e12, 1 * 1e24, 1 * 1e24], // 500000, 10000 compacted
         compacted_min_prices_indexes: [0],
-        compacted_max_prices: [3275.95 * 1e12, 1 * 1e24, 1 * 1e24], // 500000, 10000 compacted
+        compacted_max_prices: [3066.95 * 1e12, 1 * 1e24, 1 * 1e24], // 500000, 10000 compacted
         compacted_max_prices_indexes: [0],
         signatures: [
             ['signatures1', 'signatures2'], ['signatures1', 'signatures2']

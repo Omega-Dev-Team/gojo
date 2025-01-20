@@ -41,12 +41,12 @@ export async function configMarket(marketName: string) {
    });
    
 
-   const virtualTokenIdForShortTokenKey = dataStoreKeys.virtualTokenIdKey(short_token);
-   configMarketCalls.push({
-      contractAddress: dataStore.address,
-      entrypoint: "set_felt252",
-      calldata: [virtualTokenIdForShortTokenKey, configData.virtualTokenIdForIndexToken]
-   });
+   // const virtualTokenIdForShortTokenKey = dataStoreKeys.virtualTokenIdKey(short_token);
+   // configMarketCalls.push({
+   //    contractAddress: dataStore.address,
+   //    entrypoint: "set_felt252",
+   //    calldata: [virtualTokenIdForShortTokenKey, configData.virtualTokenIdForIndexToken]
+   // });
 
    const virtualTokenIdForMarketTokenKey = dataStoreKeys.virtualMarketIdKey(market);
    configMarketCalls.push({

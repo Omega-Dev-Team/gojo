@@ -17,7 +17,7 @@ async function executeLiquidationOrder() {
     const usdt: string = contractAddresses['USDT'];
     const usdc: string = contractAddresses['USDC'];
     const marketTokenAddress = contractAddresses['ETHUSDCMarketToken'];
-    const priceETH = 35000 * 1e12;
+    const priceETH = 3343 * 1e12;
     const oracleParams = {
         signer_info: 1,
         tokens: [eth, usdt, usdc],
@@ -63,23 +63,23 @@ async function executeLiquidationOrder() {
 
     const keys = await dataStoreContract.get_account_position_keys(account, 0, 1000n);
     console.log("🚀 ~ executeLiquidationOrder ~ keys:", keys)
-    const position0 = await dataStoreContract.get_position(keys[0]);
-    console.log("🚀 ~ executeLiquidationOrder ~ position0:", position0)
-    const is_position_liquidatable = await readerContract.is_position_liquidable(
-        {
-            contract_address: dataStoreContract.address
-        },
-        {
-            contract_address: contractAddresses["ReferralStorage"]
-        },
-        position0,
-        marketAddresses,
-        prices,
-        true
-    );
-    console.log("🚀 ~ executeLiquidationOrder ~ is_position_liquidatable:", is_position_liquidatable)
-
-
+    for await (const key of keys) { 
+        const position = await dataStoreContract.get_position(key);
+        const is_position_liquidatable = await readerContract.is_position_liquidable(
+            {
+                contract_address: dataStoreContract.address
+            },
+            {
+                contract_address: contractAddresses["ReferralStorage"]
+            },
+            position,
+            marketAddresses,
+            prices,
+            true
+        );
+        console.log("🚀 ~ forawait ~ is_position_liquidatable:", position, is_position_liquidatable)
+        
+    }
 
     liquidationHandlerContract.connect(account0);
 
@@ -88,7 +88,7 @@ async function executeLiquidationOrder() {
         account: account,
         market: marketTokenAddress,
         collateral_token: eth,
-        is_long: false,
+        is_long: true,
     }
 
     const executeLiquidationOrderCall = liquidationHandlerContract.populate("execute_liquidation", payload)
