@@ -45,56 +45,6 @@ fn get_execution_gas(data_store: IDataStoreDispatcher, starting_gas: u256) -> u2
     starting_gas - min_handle_error_gas
 }
 
-/// Pay the keeper the execution fee and refund any excess amount.
-/// # Arguments
-/// * `data_store` - The data storage contract dispatcher.
-/// * `event_emitter` - The event emitter contract dispatcher.
-/// * `bank` - The StrictBank contract holding the execution fee.
-/// * `execution_fee` - The executionFee amount.
-/// * `starting_gas` - The starting gas.
-/// * `keeper` - The keeper to pay.
-/// * `refund_receiver` - The account that should receive any excess gas refunds.
-/// # Returns
-/// * The key for the account order list.
-fn pay_execution_fee(
-    data_store: IDataStoreDispatcher,
-    event_emitter: IEventEmitterDispatcher,
-    bank: IBankDispatcher,
-    execution_fee: u256,
-    starting_gas: u256,
-    keeper: ContractAddress,
-    refund_receiver: ContractAddress
-) {
-    let fee_token: ContractAddress = token_utils::fee_token(data_store);
-
-    // 63/64 gas is forwarded to external calls, reduce the startingGas to account for this
-    let reduced_starting_gas = starting_gas - sn_gasleft(array![]) / 63;
-    let gas_used = reduced_starting_gas - sn_gasleft(array![]);
-
-    // each external call forwards 63/64 of the remaining gas
-    let mut execution_fee_for_keeper = adjust_gas_usage(data_store, gas_used)
-        * sn_gasprice(array![10]);
-
-    if (execution_fee_for_keeper > execution_fee) {
-        execution_fee_for_keeper = execution_fee;
-    }
-
-    bank.transfer_out(bank.contract_address, fee_token, keeper, execution_fee_for_keeper);
-
-    event_emitter.emit_keeper_execution_fee(keeper, execution_fee_for_keeper);
-
-    let refund_fee_amount = execution_fee - execution_fee_for_keeper;
-
-    let refund_fee_amount = execution_fee - execution_fee_for_keeper;
-    if (refund_fee_amount == 0) {
-        return;
-    }
-
-    bank.transfer_out(bank.contract_address, fee_token, refund_receiver, refund_fee_amount);
-
-    event_emitter.emit_execution_fee_refund(refund_receiver, refund_fee_amount);
-}
-
 fn pay_execution_fee_deposit(
     data_store: IDataStoreDispatcher,
     event_emitter: IEventEmitterDispatcher,
@@ -107,34 +57,6 @@ fn pay_execution_fee_deposit(
     let fee_token: ContractAddress = token_utils::fee_token(data_store);
     // NOTE(Ted): Auto get back execution fee to keeper
     bank.transfer_out(bank.contract_address, fee_token, keeper, execution_fee);
-
-    // 63/64 gas is forwarded to external calls, reduce the startingGas to account for this
-    // let reduced_starting_gas = starting_gas - sn_gasleft(array![100]) / 63;
-    // let gas_used = reduced_starting_gas - sn_gasleft(array![100]);
-
-    // let gas_used = 0;
-    // // each external call forwards 63/64 of the remaining gas
-    // let mut execution_fee_for_keeper = adjust_gas_usage(data_store, gas_used)
-    //     * sn_gasprice(array![10]);
-
-    // if (execution_fee_for_keeper > execution_fee) {
-    //     execution_fee_for_keeper = execution_fee;
-    // }
-
-    // bank.transfer_out(bank.contract_address, fee_token, keeper, execution_fee_for_keeper);
-
-    // event_emitter.emit_keeper_execution_fee(keeper, execution_fee_for_keeper);
-
-    // let refund_fee_amount = execution_fee - execution_fee_for_keeper;
-
-    // let refund_fee_amount = execution_fee - execution_fee_for_keeper;
-    // if (refund_fee_amount == 0) {
-    //     return;
-    // }
-
-    // bank.transfer_out(bank.contract_address, fee_token, refund_receiver, refund_fee_amount);
-
-    // event_emitter.emit_execution_fee_refund(refund_receiver, refund_fee_amount);
 }
 
 fn pay_execution_fee_order(
@@ -149,33 +71,6 @@ fn pay_execution_fee_order(
     let fee_token: ContractAddress = token_utils::fee_token(data_store);
     // NOTE(Ted): Auto get back execution fee to keeper
     bank.transfer_out(bank.contract_address, fee_token, keeper, execution_fee);
-
-    // 63/64 gas is forwarded to external calls, reduce the startingGas to account for this
-    // let reduced_starting_gas = starting_gas - sn_gasleft(array![100]) / 63;
-    // let gas_used = reduced_starting_gas - sn_gasleft(array![0]);
-
-    // // each external call forwards 63/64 of the remaining gas
-    // let mut execution_fee_for_keeper = adjust_gas_usage(data_store, gas_used)
-    //     * sn_gasprice(array![10]);
-
-    // if (execution_fee_for_keeper > execution_fee) {
-    //     execution_fee_for_keeper = execution_fee;
-    // }
-
-    // bank.transfer_out(bank.contract_address, fee_token, keeper, execution_fee_for_keeper);
-
-    // event_emitter.emit_keeper_execution_fee(keeper, execution_fee_for_keeper);
-
-    // let refund_fee_amount = execution_fee - execution_fee_for_keeper;
-
-    // let refund_fee_amount = execution_fee - execution_fee_for_keeper;
-    // if (refund_fee_amount == 0) {
-    //     return;
-    // }
-
-    // bank.transfer_out(bank.contract_address, fee_token, refund_receiver, refund_fee_amount);
-
-    // event_emitter.emit_execution_fee_refund(refund_receiver, refund_fee_amount);
 }
 
 fn pay_execution_fee_withdrawal(
@@ -190,33 +85,6 @@ fn pay_execution_fee_withdrawal(
     let fee_token: ContractAddress = token_utils::fee_token(data_store);
     // NOTE(Ted): Auto get back execution fee to keeper
     bank.transfer_out(bank.contract_address, fee_token, keeper, execution_fee);
-
-    // 63/64 gas is forwarded to external calls, reduce the startingGas to account for this
-    // let reduced_starting_gas = starting_gas - sn_gasleft(array![100]) / 63;
-    // let gas_used = reduced_starting_gas - sn_gasleft(array![100]);
-
-    // // each external call forwards 63/64 of the remaining gas
-    // let mut execution_fee_for_keeper = adjust_gas_usage(data_store, gas_used)
-    //     * sn_gasprice(array![10]);
-
-    // if (execution_fee_for_keeper > execution_fee) {
-    //     execution_fee_for_keeper = execution_fee;
-    // }
-
-    // bank.transfer_out(bank.contract_address, fee_token, keeper, execution_fee_for_keeper);
-
-    // event_emitter.emit_keeper_execution_fee(keeper, execution_fee_for_keeper);
-
-    // let refund_fee_amount = execution_fee - execution_fee_for_keeper;
-
-    // let refund_fee_amount = execution_fee - execution_fee_for_keeper;
-    // if (refund_fee_amount == 0) {
-    //     return;
-    // }
-
-    // bank.transfer_out(bank.contract_address, fee_token, refund_receiver, refund_fee_amount);
-
-    // event_emitter.emit_execution_fee_refund(refund_receiver, refund_fee_amount);
 }
 
 /// Validate that the provided executionFee is sufficient based on the estimated_gas_limit.
