@@ -8,6 +8,9 @@ export const getClassHashPath = () => {
     if (devEnv === "development") {
         return path.join(__dirname, '../constants', 'classHashes-development.json');
     }
+    if(devEnv === "production") { 
+        return path.join(__dirname, '../constants', 'classHashes-production.json');
+    }
     throw new Error("Invalid environment");
 };
 
@@ -15,6 +18,9 @@ export const getContractPath = () => {
     const devEnv = process.env.ENV as string;
     if (devEnv === "development") {
         return path.join(__dirname, '../constants', 'contractAddresses-development.json');
+    }
+    if(devEnv === "production") { 
+        return path.join(__dirname, '../constants', 'contractAddresses-production.json');
     }
     throw new Error("Invalid environment");
 };

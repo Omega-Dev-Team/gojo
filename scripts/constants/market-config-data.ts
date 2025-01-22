@@ -106,8 +106,8 @@ export const markets_config = {
     maxLongTokenPoolAmount: expandDecimals(90_000_000, 18),
     maxShortTokenPoolAmount: expandDecimals(8_000_000_000, 6),
 
-    maxLongTokenPoolAmountForDeposit: expandDecimals(2_000, 18), // Max deposit for each user
-    maxShortTokenPoolAmountForDeposit: expandDecimals(100_000, 6), // Max deposit for each user
+    maxLongTokenPoolAmountForDeposit: expandDecimals(20_000_000, 18), // Max deposit for each user
+    maxShortTokenPoolAmountForDeposit: expandDecimals(100_000_000, 6), // Max deposit for each user
 
     negativePositionImpactFactor: decimalToFloat(15, 4), // 0.015%
     positivePositionImpactFactor: decimalToFloat(9, 4), // 0.09%
@@ -177,7 +177,7 @@ export const markets_config = {
     maxLongTokenPoolAmount: expandDecimals(90_000_000, 18),
     maxShortTokenPoolAmount: expandDecimals(80_000_000, 6),
 
-    maxLongTokenPoolAmountForDeposit: expandDecimals(2000, 18), // Max deposit for each user
+    maxLongTokenPoolAmountForDeposit: expandDecimals(20_000_000, 18), // Max deposit for each user
     maxShortTokenPoolAmountForDeposit: expandDecimals(100_000_000, 6), // Max deposit for each user
 
     negativePositionImpactFactor: decimalToFloat(15, 11), // 0.05% for ~1,600,000 USD of imbalance
