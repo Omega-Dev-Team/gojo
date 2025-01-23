@@ -1,44 +1,55 @@
 import { Account, Contract, json, Calldata, CallData, RpcProvider, shortString, uint256, CairoCustomEnum, ec } from "starknet"
-import fs from 'fs'
-import dotenv from 'dotenv'
-import path from 'path';
-import { tryInvoke } from "./constants/utils";
-import exp from "constants";
-import { decimalToFloat, expandDecimals } from "./constants/market-config-data";
+import { expandDecimals, decimalToFloat, tryInvoke } from "./constants/utils";
+import { getContractAddresses } from "./utils/get-contract-addresses";
+import { account0 } from "./utils/contracts";
 
-const contractAddressesPath = path.join(__dirname, 'constants', 'contractAddresses.json');
-const contractAddresses = JSON.parse(fs.readFileSync(contractAddressesPath, 'utf8'));
 
-dotenv.config()
+const contractAddresses = getContractAddresses();
+
 
 async function create_order() {
     // connect provider
-    const providerUrl = process.env.PROVIDER_URL
-    const provider = new RpcProvider({ nodeUrl: providerUrl! })
-    // connect your account. To adapt to your own account :
-    const privateKey0: string = process.env.ACCOUNT_PRIVATE as string
-    const account0Address: string = process.env.ACCOUNT_PUBLIC as string
-    const marketTokenAddress = contractAddresses['ETHUSDTMarketToken']
+
+    const marketTokenAddress = contractAddresses['ETHUSDCMarketToken']
     console.log("🚀 ~ create_order ~ marketTokenAddress:", marketTokenAddress)
     const eth: string = contractAddresses['ETH']
-    const usdt: string = contractAddresses['USDT']
-    const account0 = new Account(provider, account0Address!, privateKey0!)
-    const currentPrice = 3800;
-    const initCollateral = 0.005;
+    const usdc: string = contractAddresses['USDC']
+
+    const currentPrice = 3333;
+    const initCollateral = 1;
     const leverage = 10;
+    const execution_fee = expandDecimals(1, 17).toBigInt();
     const createOrderCalls: Array<{ contractAddress: string, entrypoint: string, calldata: any[] }> = [
         {
+
             contractAddress: eth,
-            entrypoint: "transfer",
-            calldata: [contractAddresses['OrderVault'] as string, uint256.bnToUint256(expandDecimals(initCollateral, 18).toBigInt())]
+            entrypoint: "approve",
+            calldata: [
+                contractAddresses['Router'],
+                uint256.bnToUint256(execution_fee),
+            ]
         },
         {
-            contractAddress: contractAddresses['OrderHandler'] as string,
+            contractAddress: contractAddresses['ExchangeRouter'] as string,
+            entrypoint: "send_tokens",
+            calldata: [eth, contractAddresses['OrderVault'] as string, uint256.bnToUint256(execution_fee)]
+        },
+        {
+            contractAddress: eth,
+            entrypoint: "approve",
+            calldata: [contractAddresses['Router'] as string, uint256.bnToUint256(expandDecimals(initCollateral, 18).toBigInt())]
+        },
+        {
+            contractAddress: contractAddresses['ExchangeRouter'] as string,
+            entrypoint: "send_tokens",
+            calldata: [eth, contractAddresses['OrderVault'] as string, uint256.bnToUint256(expandDecimals(initCollateral, 18).toBigInt())]
+        },
+        {
+            contractAddress: contractAddresses['ExchangeRouter'] as string,
             entrypoint: "create_order",
             calldata: [
                 account0.address,
                 {
-                    receiver: account0.address,
                     callback_contract: 0,
                     ui_fee_receiver: 0,
                     market: marketTokenAddress,
@@ -48,14 +59,15 @@ async function create_order() {
                     initial_collateral_delta_amount: uint256.bnToUint256(expandDecimals(initCollateral, 18).toString()),
                     trigger_price: uint256.bnToUint256(expandDecimals(currentPrice, 12).toString()),
                     acceptable_price: uint256.bnToUint256(expandDecimals(currentPrice, 12).toString()),
-                    execution_fee: uint256.bnToUint256(0),
+                    execution_fee: uint256.bnToUint256(execution_fee).toString(),
                     callback_gas_limit: uint256.bnToUint256(0),
                     min_output_amount: uint256.bnToUint256(0),
                     order_type: 2,
                     decrease_position_swap_type: 0,
                     is_long: false,
                     referral_code: 0
-                }
+                },
+                "0"
             ]
         }
     ]

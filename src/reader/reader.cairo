@@ -434,7 +434,7 @@ trait IReader<TContractState> {
         market: Market,
         prices: MarketPrices,
         should_validate_min_collateral_usd: bool,
-    ) -> (bool, felt252);
+    ) -> (bool, felt252, position_utils::IsPositionLiquidatableCache);
 }
 
 #[starknet::contract]
@@ -875,7 +875,7 @@ mod Reader {
             market: Market,
             prices: MarketPrices,
             should_validate_min_collateral_usd: bool
-        ) -> (bool, felt252) {
+        ) -> (bool, felt252, position_utils::IsPositionLiquidatableCache) {
             position_utils::is_position_liquiditable(
                 data_store,
                 referral_storage,

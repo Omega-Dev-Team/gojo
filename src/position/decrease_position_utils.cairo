@@ -203,7 +203,7 @@ fn decrease_position(mut params: UpdatePositionParams) -> DecreasePositionResult
 
     position_utils::update_funding_and_borrowing_state(params, cache.prices);
     if (base_order_utils::is_liquidation_order(params.order.order_type)) {
-        let (is_liquidatable, liquidation_amount_usd) = position_utils::is_position_liquiditable(
+        let (is_liquidatable, liquidation_amount_usd, _) = position_utils::is_position_liquiditable(
             params.contracts.data_store,
             params.contracts.referral_storage,
             params.position,
@@ -212,7 +212,7 @@ fn decrease_position(mut params: UpdatePositionParams) -> DecreasePositionResult
             true
         );
         if (!is_liquidatable) {
-            PositionError::POSITION_SHOULD_NOT_BE_LIQUIDATED();
+            PositionError::POSITION_SHOULD_NOT_BE_LIQUIDATED(liquidation_amount_usd);
         }
     }
     cache.initial_collateral_amount = params.position.collateral_amount;

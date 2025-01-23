@@ -63,6 +63,7 @@ async function setFees() {
 
 
 (async () => {
+    await getFees();
     await setFees();
     await getFees();
 })();

@@ -8,11 +8,10 @@ import path from 'path';
 import { hashSingleString } from "./dataStoreKeys";
 import { bigNumberify, expandDecimals, decimalToFloat, exponentToFloat, percentageToFloat,  } from "./utils";
 
-const contractAddressesPath = path.join(__dirname, 'contractAddresses.json');
-const contractAddresses = JSON.parse(fs.readFileSync(contractAddressesPath, 'utf8'));
-const ETH = contractAddresses['ETH'];
-const BTC = contractAddresses['BTC'];
-const USDT = contractAddresses['USDT'];
+import { getContractAddresses } from "../utils/get-contract-addresses";
+
+
+const contractAddresses = getContractAddresses()
 
 dotenv.config()
 
@@ -107,8 +106,8 @@ export const markets_config = {
     maxLongTokenPoolAmount: expandDecimals(90_000_000, 18),
     maxShortTokenPoolAmount: expandDecimals(8_000_000_000, 6),
 
-    maxLongTokenPoolAmountForDeposit: expandDecimals(2_000, 18), // Max deposit for each user
-    maxShortTokenPoolAmountForDeposit: expandDecimals(10_000, 6), // Max deposit for each user
+    maxLongTokenPoolAmountForDeposit: expandDecimals(20_000_000, 18), // Max deposit for each user
+    maxShortTokenPoolAmountForDeposit: expandDecimals(100_000_000, 6), // Max deposit for each user
 
     negativePositionImpactFactor: decimalToFloat(15, 4), // 0.015%
     positivePositionImpactFactor: decimalToFloat(9, 4), // 0.09%
@@ -118,8 +117,8 @@ export const markets_config = {
     positionImpactPoolAmount: expandDecimals(0, 0), // Error: INVALID_POOL_VALUE_FOR_DEPOSIT
 
     //#region Swap fee config
-    swapFeeFactorForPositiveImpact: decimalToFloat(5, 3), // 0.05%,
-    swapFeeFactorForNegativeImpact: decimalToFloat(7, 3), // 0.07%,
+    swapFeeFactorForPositiveImpact: decimalToFloat(7, 4), // 0.07%,
+    swapFeeFactorForNegativeImpact: decimalToFloat(11, 4), // 0.11%, // Buy, Sell Fee
   
     negativeSwapImpactFactor: decimalToFloat(1, 5), // 0.001%
     positiveSwapImpactFactor: decimalToFloat(5, 6), // 0.0005%
@@ -132,6 +131,7 @@ export const markets_config = {
     minCollateralFactorForOpenInterestMultiplierLong: decimalToFloat(5, 10),
     minCollateralFactorForOpenInterestMultiplierShort: decimalToFloat(2, 10),
 
+    minCollateralUsd: decimalToFloat(2, 0), // 2 USD
 
     reserveFactorLongs: decimalToFloat(1, 0), // 95%,= 0.95, amount of ETH for reserve
     reserveFactorShorts: decimalToFloat(1, 0), // 95%,
@@ -177,7 +177,7 @@ export const markets_config = {
     maxLongTokenPoolAmount: expandDecimals(90_000_000, 18),
     maxShortTokenPoolAmount: expandDecimals(80_000_000, 6),
 
-    maxLongTokenPoolAmountForDeposit: expandDecimals(2000, 18), // Max deposit for each user
+    maxLongTokenPoolAmountForDeposit: expandDecimals(20_000_000, 18), // Max deposit for each user
     maxShortTokenPoolAmountForDeposit: expandDecimals(100_000_000, 6), // Max deposit for each user
 
     negativePositionImpactFactor: decimalToFloat(15, 11), // 0.05% for ~1,600,000 USD of imbalance
@@ -192,10 +192,10 @@ export const markets_config = {
 
     //#region Minimum collateral 
     // minCollateralFactor of 0.01 (1%) when open interest is 50,000,000 USD
-    minCollateralFactor: decimalToFloat(1, 2), // 1%
+    minCollateralFactor: decimalToFloat(5, 2), // 1%
     minCollateralFactorForOpenInterestMultiplierLong: decimalToFloat(5, 10),
     minCollateralFactorForOpenInterestMultiplierShort: decimalToFloat(2, 10),
-
+    minCollateralUsd: decimalToFloat(2, 0), // 2 USD
 
     reserveFactorLongs: decimalToFloat(1, 0), // 95%,= 0.95, amount of ETH for reserve
     reserveFactorShorts: decimalToFloat(1, 0), // 95%,

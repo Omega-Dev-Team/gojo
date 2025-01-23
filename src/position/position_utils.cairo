@@ -179,12 +179,21 @@ struct IsPositionLiquidatableCache {
     usd_delta_for_price_impact: i256,
     /// The price impact of closing the position in USD.
     price_impact_usd: i256,
+    price_impact_usd_test_1: i256,
+    /// The max price impact
+    max_negatice_price_impact: i256,
+
     has_positive_impact: bool,
     /// The minimum allowed collateral in USD.
     min_collateral_usd: i256,
     min_collateral_usd_for_leverage: i256,
     /// The remaining position collateral in USD.
     remaining_collateral_usd: i256,
+
+    /// Fees
+    collateral_cost_usd: u256,
+    total_cost_amount: u256,
+    // fees: PositionFees
 }
 
 impl DefaultGetPositionPnlUsdCache of Default<GetPositionPnlUsdCache> {
@@ -215,10 +224,16 @@ impl DefaultIsPositionLiquidatableCache of Default<IsPositionLiquidatableCache> 
             collateral_usd: 0,
             usd_delta_for_price_impact: Zeroable::zero(),
             price_impact_usd: Zeroable::zero(),
+            price_impact_usd_test_1: Zeroable::zero(),
+            max_negatice_price_impact: Zeroable::zero(),
             has_positive_impact: false,
             min_collateral_usd: Zeroable::zero(),
             min_collateral_usd_for_leverage: Zeroable::zero(),
-            remaining_collateral_usd: Zeroable::zero()
+            remaining_collateral_usd: Zeroable::zero(),
+            collateral_cost_usd: Zeroable::zero(),
+            total_cost_amount: Zeroable::zero(),
+
+            // fees: Default::default()
         }
     }
 }
@@ -425,7 +440,7 @@ fn validate_position(
         let min_position_size_usd = data_store.get_u256(keys::min_position_size_usd());
         assert(position.size_in_usd >= min_position_size_usd, PositionError::MIN_POSITION_SIZE);
     }
-    let (is_liquiditable, reason) = is_position_liquiditable(
+    let (is_liquiditable, reason, _) = is_position_liquiditable(
         data_store, referral_storage, position, market, prices, should_validate_min_collateral_usd
     );
     assert(!is_liquiditable, PositionError::LIQUIDATABLE_POSITION);
@@ -447,7 +462,7 @@ fn is_position_liquiditable(
     market: Market,
     prices: MarketPrices,
     should_validate_min_collateral_usd: bool
-) -> (bool, felt252) {
+) -> (bool, felt252, IsPositionLiquidatableCache) {
     let mut cache: IsPositionLiquidatableCache = Default::default();
     let (pos_pnl_usd, _, _) = get_position_pnl_usd(
         data_store, market, prices, position, position.size_in_usd
@@ -472,6 +487,7 @@ fn is_position_liquiditable(
                     is_long: position.is_long
                 }
             );
+    cache.price_impact_usd_test_1 = cache.price_impact_usd;
     cache.has_positive_impact = cache.price_impact_usd > Zeroable::zero();
     // even if there is a large positive price impact, positions that would be liquidated
     // if the positive price impact is reduced should not be allowed to be created
@@ -491,6 +507,7 @@ fn is_position_liquiditable(
         let max_negatice_price_impact = calc::to_signed(
             precision::apply_factor_u256(position.size_in_usd, max_price_impact_factor), true
         );
+        cache.max_negatice_price_impact = max_negatice_price_impact;
         if cache.price_impact_usd < max_negatice_price_impact {
             cache.price_impact_usd = max_negatice_price_impact;
         }
@@ -507,11 +524,13 @@ fn is_position_liquiditable(
         ui_fee_receiver: contract_address_const::<0>(),
     };
     let fees = position_pricing_utils::get_position_fees(pos_fees_params);
+    //cache.fees = fees;
     // the totalCostAmount is in tokens, use collateralTokenPrice.min to calculate the cost in USD
     // since in PositionPricingUtils.getPositionFees the totalCostAmount in tokens was calculated
     // using collateralTokenPrice.min
     let collateral_cost_usd = fees.total_cost_amount * cache.collateral_token_price.min;
-
+    cache.collateral_cost_usd = collateral_cost_usd;
+    cache.total_cost_amount = fees.total_cost_amount;
     // the position's pnl is counted as collateral for the liquidation check
     // as a position in profit should not be liquidated if the pnl is sufficient
     // to cover the position's fees
@@ -525,11 +544,11 @@ fn is_position_liquiditable(
             .min_collateral_usd =
                 calc::to_signed(data_store.get_u256(keys::min_collateral_usd()), true);
         if (cache.remaining_collateral_usd < cache.min_collateral_usd) {
-            return (true, 'min collateral');
+            return (true, 'min collateral', cache);
         }
     }
     if cache.remaining_collateral_usd <= Zeroable::zero() {
-        return (true, '0<');
+        return (true, '0<', cache);
     }
     cache
         .min_collateral_factor =
@@ -544,11 +563,12 @@ fn is_position_liquiditable(
                 true
             );
 
-    if cache.remaining_collateral_usd <= cache.min_collateral_usd_for_leverage {
-        return (true, 'min collateral for leverage');
+    // NOTE(Ted): update "<=" to "<"
+    if cache.remaining_collateral_usd < cache.min_collateral_usd_for_leverage {
+        return (true, 'min collateral for leverage', cache);
     }
 
-    (false, '')
+    (false, 'not liquidated', cache)
 }
 
 

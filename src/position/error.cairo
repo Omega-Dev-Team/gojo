@@ -25,8 +25,9 @@ mod PositionError {
         panic(data)
     }
 
-    fn POSITION_SHOULD_NOT_BE_LIQUIDATED() {
-        let data = array!['position not be liquidated'];
+    fn POSITION_SHOULD_NOT_BE_LIQUIDATED(liquidation_amount_usd: felt252) {
+        let mut data = array!['position not be liquidated'];
+        data.append(liquidation_amount_usd);
         panic(data)
     }
 

@@ -3,9 +3,9 @@ import fs from 'fs'
 import path from 'path';
 import dotenv from 'dotenv'
 import { sleep, tryInvoke } from "./constants/utils"
+import { getContractAddresses } from "./utils/get-contract-addresses";
 
-const contractAddressesPath = path.join(__dirname, 'constants', 'contractAddresses.json');
-const contractAddresses = JSON.parse(fs.readFileSync(contractAddressesPath, 'utf8'));
+const contractAddresses = getContractAddresses();
 
 dotenv.config()
 
@@ -54,6 +54,11 @@ async function deploy() {
             contractAddress: contractAddresses['RoleStore'],
             entrypoint: "grant_role",
             calldata: [tedAccountAddress, shortString.encodeShortString("ORDER_KEEPER")]
+        },
+        {
+            contractAddress: contractAddresses['RoleStore'],
+            entrypoint: "grant_role",
+            calldata: [tedAccountAddress, shortString.encodeShortString("LIQUIDATION_KEEPER")]
         },
         {
             contractAddress: contractAddresses['RoleStore'],
