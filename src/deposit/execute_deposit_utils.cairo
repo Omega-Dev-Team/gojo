@@ -228,7 +228,7 @@ fn execute_deposit(params: ExecuteDepositParams) {
         DepositError::MIN_MARKET_TOKENS(cache.received_market_tokens, deposit.min_market_tokens);
     }
 
-    market_utils::validate_market_token_balance_check(params.data_store, market); // TOOD uncomment
+    market_utils::validate_market_token_balance_check(params.data_store, market);
 
     (params.event_emitter)
         .emit_deposit_executed(
@@ -237,9 +237,9 @@ fn execute_deposit(params: ExecuteDepositParams) {
             cache.short_token_amount,
             cache.received_market_tokens,
         );
-    // let mut event_data: LogData = Default::default();
+    let mut event_data: LogData = Default::default();
     // event_data.uint_dict.insert_single('received_market_tokens', cache.received_market_tokens);
-    // after_deposit_execution(params.key, deposit, event_data);
+    after_deposit_execution(params.key, deposit, event_data);
 
     pay_execution_fee_deposit(
         params.data_store,

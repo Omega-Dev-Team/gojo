@@ -418,13 +418,14 @@ trait IReader<TContractState> {
     /// # Returns
     /// Returns an unsigned integer representing the latest ADL block, a boolean value indicating whether ADL should be enabled for the specified market and position, 
     /// signed integer representing the PnL to pool factor, which is a metric used to assess the position's impact on the and an unsigned integer representing the maximum PnL factor.
-    fn get_adl_state(
-        self: @TContractState,
-        data_store: IDataStoreDispatcher,
-        market: ContractAddress,
-        is_long: bool,
-        prices: MarketPrices
-    ) -> (u64, bool, i256, u256);
+    /// NOTE(Ted): Remove this function
+    // fn get_adl_state(
+    //     self: @TContractState,
+    //     data_store: IDataStoreDispatcher,
+    //     market: ContractAddress,
+    //     is_long: bool,
+    //     prices: MarketPrices
+    // ) -> (u64, bool, i256, u256);
 
     fn is_position_liquidable(
         self: @TContractState,
@@ -468,7 +469,6 @@ mod Reader {
     use satoru::price::price::Price;
     use satoru::order::order::{Order};
     use satoru::data::keys;
-    use satoru::adl::adl_utils;
 
     use satoru::reader::{
         reader_utils, reader_utils::PositionInfo, reader_utils::BaseFundingValues,
@@ -849,22 +849,6 @@ mod Reader {
             reader_pricing_utils::get_swap_price_impact(
                 data_store, market, token_in, token_out, amount_in, token_in_price, token_out_price
             )
-        }
-
-        fn get_adl_state(
-            self: @ContractState,
-            data_store: IDataStoreDispatcher,
-            market: ContractAddress,
-            is_long: bool,
-            prices: MarketPrices
-        ) -> (u64, bool, i256, u256) {
-            let latest_adl_block = adl_utils::get_latest_adl_block(data_store, market, is_long);
-            let _market = market_utils::get_enabled_market(data_store, market);
-            let (should_enabled_ald, pnl_to_pool_factor, max_pnl_factor) =
-                market_utils::is_pnl_factor_exceeded_check(
-                data_store, _market, prices, is_long, keys::max_pnl_factor_for_adl()
-            );
-            (latest_adl_block, should_enabled_ald, pnl_to_pool_factor, max_pnl_factor)
         }
 
         fn is_position_liquidable(

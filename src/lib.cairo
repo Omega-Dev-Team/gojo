@@ -1,11 +1,5 @@
 // Declare modules.
 
-// `adl` is a module to help with auto-deleveraging.
-mod adl {
-    mod adl_utils;
-    mod error;
-}
-
 // `bank` is a module handling storing and transferring of tokens.
 mod bank {
     mod bank;
@@ -17,7 +11,6 @@ mod bank {
 mod callback {
     mod callback_utils;
     mod error;
-    mod mocks;
     mod deposit_callback_receiver {
         mod interface;
     }
