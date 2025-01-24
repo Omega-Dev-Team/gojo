@@ -2456,7 +2456,9 @@ fn get_borrowing_factor_per_second(
         } else {
             market.short_token
         };
-        MarketError::UNABLE_TO_GET_BORROWING_FACTOR_EMPTY_POOL_USD(pool_usd, market.market_token, token);
+        MarketError::UNABLE_TO_GET_BORROWING_FACTOR_EMPTY_POOL_USD(
+            pool_usd, market.market_token, token
+        );
     }
 
     let borrowing_exponent_factor: u256 = get_borrowing_exponent_factor(
@@ -2688,7 +2690,9 @@ fn validate_max_pnl(
     );
 
     if (is_pnl_factor_exceeded_for_longs) {
-        MarketError::PNL_EXCEEDED_FOR_LONGS(is_pnl_factor_exceeded_for_longs, pnl_to_pool_factor_for_longs, max_pnl_factor_for_longs);
+        MarketError::PNL_EXCEEDED_FOR_LONGS(
+            is_pnl_factor_exceeded_for_longs, pnl_to_pool_factor_for_longs, max_pnl_factor_for_longs
+        );
     }
 
     let (
@@ -2699,7 +2703,11 @@ fn validate_max_pnl(
     );
 
     if (is_pnl_factor_exceeded_for_shorts) {
-        MarketError::PNL_EXCEEDED_FOR_SHORTS(is_pnl_factor_exceeded_for_shorts, pnl_to_pool_factor_for_shorts, max_pnl_factor_for_shorts);
+        MarketError::PNL_EXCEEDED_FOR_SHORTS(
+            is_pnl_factor_exceeded_for_shorts,
+            pnl_to_pool_factor_for_shorts,
+            max_pnl_factor_for_shorts
+        );
     }
 }
 
@@ -2831,7 +2839,7 @@ fn validate_market_token_balance_with_token(
     // assert(balance >= expected_min_balance, MarketError::INVALID_MARKET_TOKEN_BALANCE);
     // NOTE(Ted): Check balance have to less than expected_min_balance, MAKE SURE: actual balance is enough for the market
     // Issue with the actual balance, low() is not working. Example: 112.5 is return as 112
-    if(balance < expected_min_balance) {
+    if (balance < expected_min_balance) {
         MarketError::INVALID_MARKET_TOKEN_BALANCE_VALUE(balance, expected_min_balance, token);
     }
 

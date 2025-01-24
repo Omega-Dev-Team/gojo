@@ -6,10 +6,7 @@ use snforge_std::{declare, ContractClassTrait, start_prank, stop_prank};
 
 use array::ArrayTrait;
 
-fn setup() -> (
-    ContractAddress,
-    ContractAddress
-) {
+fn setup() -> (ContractAddress, ContractAddress) {
     let caller = contract_address_const::<1>();
 
     let chain_class = declare('Chain');

@@ -182,18 +182,16 @@ struct IsPositionLiquidatableCache {
     price_impact_usd_test_1: i256,
     /// The max price impact
     max_negatice_price_impact: i256,
-
     has_positive_impact: bool,
     /// The minimum allowed collateral in USD.
     min_collateral_usd: i256,
     min_collateral_usd_for_leverage: i256,
     /// The remaining position collateral in USD.
     remaining_collateral_usd: i256,
-
     /// Fees
     collateral_cost_usd: u256,
     total_cost_amount: u256,
-    // fees: PositionFees
+// fees: PositionFees
 }
 
 impl DefaultGetPositionPnlUsdCache of Default<GetPositionPnlUsdCache> {
@@ -232,8 +230,7 @@ impl DefaultIsPositionLiquidatableCache of Default<IsPositionLiquidatableCache> 
             remaining_collateral_usd: Zeroable::zero(),
             collateral_cost_usd: Zeroable::zero(),
             total_cost_amount: Zeroable::zero(),
-
-            // fees: Default::default()
+        // fees: Default::default()
         }
     }
 }

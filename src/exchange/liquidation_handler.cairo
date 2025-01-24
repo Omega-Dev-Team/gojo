@@ -154,7 +154,8 @@ mod LiquidationHandler {
                 BaseOrderHandler::unsafe_new_contract_state(); //retrieve BaseOrderHandler state
             global_reentrancy_guard::non_reentrant_before(state_base.data_store.read());
 
-            let mut role_state: RoleModule::ContractState = RoleModule::unsafe_new_contract_state(); // TODO uncomment role
+            let mut role_state: RoleModule::ContractState =
+                RoleModule::unsafe_new_contract_state(); // TODO uncomment role
             IRoleModule::only_liquidation_keeper(@role_state);
 
             with_oracle_prices_before(
