@@ -16,3 +16,22 @@
 ## About Gojo
 
 Gojo is a decentralized spot and perpetual exchange that supports low swap fees and low price impact trades. Trading is supported by unique multi-asset pools that earns liquidity providers fees from market making, swap fees and leverage trading.
+
+## Version
+
+```
+scarb: v2.3.1
+snfoundry: v0.10.2
+```
+
+## Build
+
+```
+scarb build
+```
+
+## Test
+
+```
+snforge
+```
