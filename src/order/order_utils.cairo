@@ -176,7 +176,7 @@ mod OrderUtils {
         /// * `params` - The parameters used to create the order.
         /// # Returns
         /// Return the key of the created order.
-        fn create_order_utils( //TODO and fix when fee_token is implememted
+        fn create_order_utils( //TODO and fix when fee_token is implemented
             ref self: ContractState,
             data_store: IDataStoreDispatcher,
             event_emitter: IEventEmitterDispatcher,

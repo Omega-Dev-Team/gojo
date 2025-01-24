@@ -170,7 +170,6 @@ mod mock {
     mod error;
     mod governable;
     mod referral_storage;
-    mod mock_account;
 }
 
 // `oracle` contains functions related to oracles used by Satoru.
@@ -235,11 +234,6 @@ mod swap {
 mod token {
     mod erc20;
     mod token_utils;
-}
-
-mod test_utils {
-    mod deposit_setup;
-    mod tests_lib;
 }
 
 // `withdrawal` contains withdrawal management functions
