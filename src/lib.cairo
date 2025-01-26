@@ -179,7 +179,6 @@ mod oracle {
     mod oracle_store;
     mod oracle_utils;
     mod oracle;
-    mod price_feed;
     mod interfaces {
         mod account;
     }
