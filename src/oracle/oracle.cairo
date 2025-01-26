@@ -332,7 +332,6 @@ mod Oracle {
 
             // NOTE(Ted): Emit event OraclePriceUpdate for Indexer tracking
             self.emit_tokens_oracle_price_update_(event_emitter, cloned_params);
-            // self.set_prices_(data_store, event_emitter, params); TODO uncomment
         }
 
         // Set the primary price
