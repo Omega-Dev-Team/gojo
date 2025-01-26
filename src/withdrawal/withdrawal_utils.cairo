@@ -188,11 +188,11 @@ fn execute_withdrawal(
     assert(withdrawal.account.is_non_zero(), WithdrawalError::EMPTY_WITHDRAWAL);
     assert(withdrawal.market_token_amount.is_non_zero(), WithdrawalError::EMPTY_WITHDRAWAL_AMOUNT);
 
-    // oracle_utils::validate_block_number_within_range(
-    //     params.min_oracle_block_numbers.span(),
-    //     params.max_oracle_block_numbers.span(),
-    //     withdrawal.updated_at_block
-    // );
+    oracle_utils::validate_block_number_within_range(
+        params.min_oracle_block_numbers.span(),
+        params.max_oracle_block_numbers.span(),
+        withdrawal.updated_at_block
+    );
 
     let market_token_balance = IMarketTokenDispatcher { contract_address: withdrawal.market }
         .balance_of(params.withdrawal_vault.contract_address);
