@@ -31,7 +31,6 @@ mod chain {
 mod config {
     mod config;
     mod error;
-    mod timelock;
 }
 
 // `event` is a module event management functions.
