@@ -127,6 +127,7 @@ fn deposit_setup(
         withdrawal_handler,
         withdrawal_vault,
         liquidation_handler,
+        fee_handler,
     ) =
         setup();
 

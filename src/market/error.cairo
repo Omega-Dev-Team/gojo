@@ -52,23 +52,32 @@ mod MarketError {
         )
     }
 
-    fn PNL_EXCEEDED_FOR_LONGS(is_pnl_factor_exceeded_for_longs: bool, pnl_to_pool_factor_for_longs: i256, max_pnl_factor_for_longs: u256) {
+    fn PNL_EXCEEDED_FOR_LONGS(
+        is_pnl_factor_exceeded_for_longs: bool,
+        pnl_to_pool_factor_for_longs: i256,
+        max_pnl_factor_for_longs: u256
+    ) {
         panic(
             array![
-                'pnl_exceeded_for_longs', 
-                is_pnl_factor_exceeded_for_longs.into(), 
-                pnl_to_pool_factor_for_longs.into(), 
+                'pnl_exceeded_for_longs',
+                is_pnl_factor_exceeded_for_longs.into(),
+                pnl_to_pool_factor_for_longs.into(),
                 max_pnl_factor_for_longs.try_into().expect('u256 into felt failed')
-            
-        ])
+            ]
+        )
     }
 
-    fn PNL_EXCEEDED_FOR_SHORTS(is_pnl_factor_exceeded_for_shorts: bool, pnl_to_pool_factor_for_shorts:i256, max_pnl_factor_for_shorts: u256) {
+    fn PNL_EXCEEDED_FOR_SHORTS(
+        is_pnl_factor_exceeded_for_shorts: bool,
+        pnl_to_pool_factor_for_shorts: i256,
+        max_pnl_factor_for_shorts: u256
+    ) {
         panic(
             array![
-                'pnl_exceeded_for_shorts', 
-                is_pnl_factor_exceeded_for_shorts.into(), 
-                pnl_to_pool_factor_for_shorts.into(), max_pnl_factor_for_shorts.try_into().expect('u256 into felt failed')
+                'pnl_exceeded_for_shorts',
+                is_pnl_factor_exceeded_for_shorts.into(),
+                pnl_to_pool_factor_for_shorts.into(),
+                max_pnl_factor_for_shorts.try_into().expect('u256 into felt failed')
             ]
         )
     }
@@ -105,7 +114,9 @@ mod MarketError {
         )
     }
 
-    fn UNABLE_TO_GET_BORROWING_FACTOR_EMPTY_POOL_USD(pool_usd: u256, market: ContractAddress, token: ContractAddress) {
+    fn UNABLE_TO_GET_BORROWING_FACTOR_EMPTY_POOL_USD(
+        pool_usd: u256, market: ContractAddress, token: ContractAddress
+    ) {
         panic(
             array![
                 'unable_to_get_borrowing_factor',
@@ -162,7 +173,9 @@ mod MarketError {
         panic(array!['unexpected_token', token.into()])
     }
 
-    fn INVALID_MARKET_TOKEN_BALANCE_VALUE(balance: u256, expected_min_balance: u256, token: ContractAddress) {
+    fn INVALID_MARKET_TOKEN_BALANCE_VALUE(
+        balance: u256, expected_min_balance: u256, token: ContractAddress
+    ) {
         panic(
             array![
                 INVALID_MARKET_TOKEN_BALANCE,

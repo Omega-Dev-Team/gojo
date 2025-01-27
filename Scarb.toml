@@ -29,3 +29,6 @@ pragma_lib = { git = "https://github.com/astraly-labs/pragma-lib" }
 
 [tool.snforge]
 exit_first = false
+
+[scripts]
+test = "snforge test"
