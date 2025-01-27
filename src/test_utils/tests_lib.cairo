@@ -50,6 +50,7 @@ use satoru::market::market_utils;
 use satoru::price::price::{Price, PriceTrait};
 use satoru::position::position_utils;
 use satoru::withdrawal::withdrawal_utils;
+use satoru::fee::fee_handler::{IFeeHandlerDispatcher, IFeeHandlerDispatcherTrait};
 
 use satoru::exchange::liquidation_handler::{
     ILiquidationHandlerDispatcher, ILiquidationHandlerDispatcherTrait
@@ -126,6 +127,7 @@ fn setup() -> (
     IWithdrawalHandlerDispatcher,
     IWithdrawalVaultDispatcher,
     ILiquidationHandlerDispatcher,
+    IFeeHandlerDispatcher,
 ) {
     let (
         caller_address,
@@ -148,6 +150,7 @@ fn setup() -> (
         withdrawal_handler,
         withdrawal_vault,
         liquidation_handler,
+        fee_handler,
     ) =
         setup_contracts();
     grant_roles_and_prank(caller_address, role_store, data_store, market_factory);
@@ -172,6 +175,7 @@ fn setup() -> (
         withdrawal_handler,
         withdrawal_vault,
         liquidation_handler,
+        fee_handler,
     )
 }
 
@@ -248,6 +252,7 @@ fn setup_contracts() -> (
     IWithdrawalHandlerDispatcher,
     IWithdrawalVaultDispatcher,
     ILiquidationHandlerDispatcher,
+    IFeeHandlerDispatcher,
 ) {
     // Deploy the role store contract.
     let role_store_address = deploy_role_store();
@@ -384,6 +389,14 @@ fn setup_contracts() -> (
     let liquidation_handler = ILiquidationHandlerDispatcher {
         contract_address: liquidation_handler_address
     };
+
+    // deploy fee handler
+    let fee_handler_address = deploy_fee_handler(
+        data_store_address, role_store_address, event_emitter_address
+    );
+
+    let fee_handler = IFeeHandlerDispatcher { contract_address: fee_handler_address };
+
     (
         contract_address_const::<'caller'>(),
         market_factory_address,
@@ -405,6 +418,7 @@ fn setup_contracts() -> (
         withdrawal_handler,
         withdrawal_vault,
         liquidation_handler,
+        fee_handler,
     )
 }
 
@@ -750,4 +764,18 @@ fn deploy_erc20_token(deposit_vault_address: ContractAddress) -> ContractAddress
         'satoru', 'STU', INITIAL_TOKENS_MINTED, 0, deposit_vault_address.into()
     ];
     erc20_contract.deploy(@constructor_calldata3).unwrap()
+}
+
+fn deploy_fee_handler(
+    data_store_address: ContractAddress,
+    role_store_address: ContractAddress,
+    event_emitter_address: ContractAddress
+) -> ContractAddress {
+    let contract = declare('FeeHandler');
+    let mut constructor_calldata = array![];
+    constructor_calldata.append(data_store_address.into());
+    constructor_calldata.append(role_store_address.into());
+    constructor_calldata.append(event_emitter_address.into());
+
+    contract.deploy(@constructor_calldata).unwrap()
 }
