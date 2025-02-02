@@ -7,3 +7,9 @@ mod chain {
 mod role {
     mod role_test;
 }
+
+#[cfg(test)]
+mod bank {
+    mod test_bank;
+    mod test_strict_bank;
+}
