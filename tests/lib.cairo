@@ -11,6 +11,7 @@ mod role {
 #[cfg(test)]
 mod config {
     mod test_config;
+}
 
 #[cfg(test)]
 mod bank {
