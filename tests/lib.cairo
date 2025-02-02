@@ -7,3 +7,9 @@ mod chain {
 mod role {
     mod role_test;
 }
+
+
+#[cfg(test)]
+mod config {
+    mod test_config;
+}
