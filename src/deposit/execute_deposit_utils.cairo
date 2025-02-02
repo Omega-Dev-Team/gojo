@@ -470,7 +470,7 @@ fn swap(
             oracle: *params.oracle,
             // bank: IBankDispatcher { contract_address: market },
             // NOTE(Ted): Must to transfer deposit amount from DepositVault to MarketToken.
-            bank: IBankDispatcher { contract_address: *params.deposit_vault.contract_address }, 
+            bank: IBankDispatcher { contract_address: *params.deposit_vault.contract_address },
             key: *params.key,
             token_in: initial_token,
             amount_in: input_amount,

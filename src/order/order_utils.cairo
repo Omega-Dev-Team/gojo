@@ -335,20 +335,20 @@ mod OrderUtils {
                 .contracts
                 .event_emitter
                 .emit_order_executed(params.key, params.secondary_order_type);
-        // callback_utils::after_order_execution(params.key, params.order, event_data);
+            // callback_utils::after_order_execution(params.key, params.order, event_data);
 
-        // the order.executionFee for liquidation / adl orders is zero
-        // gas costs for liquidations / adl is subsidised by the treasury
-        // TODO crashing
-        gas_utils::pay_execution_fee_order(
-            params.contracts.data_store,
-            params.contracts.event_emitter,
-            params.contracts.order_vault,
-            params.order.execution_fee,
-            params.starting_gas,
-            params.keeper,
-            params.order.account
-        );
+            // the order.executionFee for liquidation / adl orders is zero
+            // gas costs for liquidations / adl is subsidised by the treasury
+            // TODO crashing
+            gas_utils::pay_execution_fee_order(
+                params.contracts.data_store,
+                params.contracts.event_emitter,
+                params.contracts.order_vault,
+                params.order.execution_fee,
+                params.starting_gas,
+                params.keeper,
+                params.order.account
+            );
         }
 
         /// Process an order execution.
@@ -410,18 +410,18 @@ mod OrderUtils {
             }
 
             event_emitter.emit_order_cancelled(key, reason, reason_bytes.span());
-        // let mut event_data: LogData = Default::default();
-        // callback_utils::after_order_cancellation(key, order, event_data);
+            // let mut event_data: LogData = Default::default();
+            // callback_utils::after_order_cancellation(key, order, event_data);
 
-        gas_utils::pay_execution_fee_order(
-            data_store,
-            event_emitter,
-            order_vault,
-            order.execution_fee,
-            starting_gas,
-            keeper,
-            order.account
-        );
+            gas_utils::pay_execution_fee_order(
+                data_store,
+                event_emitter,
+                order_vault,
+                order.execution_fee,
+                starting_gas,
+                keeper,
+                order.account
+            );
         }
 
 
