@@ -1,4 +1,3 @@
-
 mod PricingError {
     use starknet::ContractAddress;
     use satoru::utils::i256::i256;
@@ -16,7 +15,9 @@ mod PricingError {
         panic(data)
     }
 
-    fn USD_DELTA_EXCEEDS_POOL_VALUE(token: ContractAddress, usd_delta: felt252, pool_usd_for_token: u256) {
+    fn USD_DELTA_EXCEEDS_POOL_VALUE(
+        token: ContractAddress, usd_delta: felt252, pool_usd_for_token: u256
+    ) {
         let mut data = array!['usd_delta_exceeds_pool_value'];
         // TODO adding this crash on swap test
         data.append(token.into());

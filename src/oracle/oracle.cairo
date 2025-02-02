@@ -304,7 +304,7 @@ mod Oracle {
             params: SetPricesParams,
         ) {
             let cloned_params = params.clone();
-            
+
             let state: RoleModule::ContractState = RoleModule::unsafe_new_contract_state();
             IRoleModule::only_controller(@state);
             let tokens_with_prices_len = self.tokens_with_prices.read().len();
@@ -335,8 +335,8 @@ mod Oracle {
 
             // NOTE(Ted): Emit event OraclePriceUpdate for Indexer tracking
             self.emit_tokens_oracle_price_update_(event_emitter, cloned_params);
-            // end for testing
-            // self.set_prices_(data_store, event_emitter, params); TODO uncomment
+        // end for testing
+        // self.set_prices_(data_store, event_emitter, params); TODO uncomment
         }
 
         // Set the primary price
@@ -451,11 +451,8 @@ mod Oracle {
     // *************************************************************************
     #[generate_trait]
     impl InternalImpl of InternalTrait {
-
-    fn emit_tokens_oracle_price_update_(
-            self: @ContractState,
-            event_emitter: IEventEmitterDispatcher,
-            params: SetPricesParams,
+        fn emit_tokens_oracle_price_update_(
+            self: @ContractState, event_emitter: IEventEmitterDispatcher, params: SetPricesParams,
         ) {
             let mut i = 0;
             loop {
@@ -886,7 +883,6 @@ mod Oracle {
         //         );
         //     }
         // }
-
 
         /// Set the primary price.
         /// # Arguments
