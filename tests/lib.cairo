@@ -18,4 +18,5 @@ mod bank {
 mod deposit {
     mod test_deposit;
     mod test_deposit_utils;
+    mod test_deposit_vault; 
 }
