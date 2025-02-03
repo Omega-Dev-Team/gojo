@@ -19,3 +19,10 @@ mod bank {
     mod test_strict_bank;
 
 }
+
+#[cfg(test)]
+mod deposit {
+    mod test_deposit;
+    mod test_deposit_utils;
+    mod test_deposit_vault; 
+}
