@@ -43,7 +43,7 @@ export async function getAccountLatestDepositKeys(accountAddress: string) {
 }
 
 async function execute_deposit() {
-    const key = await getAccountLatestDepositKeys("0x048b7fa2d7519ead304594b4006cbaaeaf3d3ce34b7c7e88a20939d953679521");
+    const key = await getAccountLatestDepositKeys("0x06774e2c4fde12cc5a161fe2a717d3d7f43129d5ae388faaf52a2fb104bfd686");
     console.log("🚀 ~ execute_deposit ~ key:", key)
 
     const current_block = await provider.getBlockNumber();
@@ -58,9 +58,9 @@ async function execute_deposit() {
         compacted_max_oracle_block_numbers: [block1, block1, block1],
         compacted_oracle_timestamps: [current_block_data.timestamp, current_block_data.timestamp, current_block_data.timestamp],
         compacted_decimals: [18, 6, 6],
-        compacted_min_prices: [3300.95 * 1e12, 1 * 1e24, 1 * 1e24], // 500000, 10000 compacted
+        compacted_min_prices: [2861.95 * 1e12, 1 * 1e24, 1 * 1e24], // 500000, 10000 compacted
         compacted_min_prices_indexes: [0],
-        compacted_max_prices: [3300.95 * 1e12, 1 * 1e24, 1 * 1e24], // 500000, 10000 compacted
+        compacted_max_prices: [2861.95 * 1e12, 1 * 1e24, 1 * 1e24], // 500000, 10000 compacted
         compacted_max_prices_indexes: [0],
         signatures: [
             ['signatures1', 'signatures2'], ['signatures1', 'signatures2']

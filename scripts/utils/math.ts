@@ -1,12 +1,6 @@
-import { Account, Call, RpcProvider } from "starknet";
-import dotenv from 'dotenv'
+import { Call} from "starknet";
 import { ethers } from "ethers";
-dotenv.config()
-const providerUrl = process.env.PROVIDER_URL
-const provider = new RpcProvider({ nodeUrl: providerUrl! })
-const account0Address: string = process.env.ACCOUNT_PUBLIC as string
-const privateKey0: string = process.env.ACCOUNT_PRIVATE as string
-const account = new Account(provider, account0Address!, privateKey0!)
+import { account0, provider } from "./contracts";
 
 
 export function bigNumberify(n: any) {
@@ -53,7 +47,7 @@ export function bigNumberify(n: any) {
 export async function tryInvoke(functionName: string, calldata: Call[]) {
    try {
       console.log(`\x1b[32m🚀 INVOKE ${functionName}...`);
-      const txCall = await account.execute(calldata);
+      const txCall = await account0.execute(calldata);
       console.log(`\x1b[32m✅ https://sepolia.starkscan.co/tx/` + txCall.transaction_hash);
       await provider.waitForTransaction(txCall.transaction_hash);
    } catch (e) {

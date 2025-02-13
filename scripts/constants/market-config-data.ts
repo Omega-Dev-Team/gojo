@@ -1,13 +1,8 @@
-import { } from "starknet";
-import { num, ec } from "starknet";
-import { ethers } from "ethers";
-const { starkCurve } = ec;
+import { ec } from "starknet";
 import dotenv from 'dotenv'
-import fs from 'fs'
-import path from 'path';
 import { hashSingleString } from "./dataStoreKeys";
-import { bigNumberify, expandDecimals, decimalToFloat, exponentToFloat, percentageToFloat,  } from "./utils";
-
+import { expandDecimals, decimalToFloat, percentageToFloat,  } from "./../utils/math";
+import { SECONDS_PER_YEAR, SECONDS_PER_HOUR } from "./../utils/constants";
 import { getContractAddresses } from "../utils/get-contract-addresses";
 
 
@@ -137,7 +132,7 @@ export const markets_config = {
     reserveFactorShorts: decimalToFloat(1, 0), // 95%,
 
     //#region Reserve Factor for Open Interest, số tiền dự trữ của LONG-SHORT Token có thể trade
-    openInterestReserveFactorLongs: decimalToFloat(8, 1), // 90%, // Config % liquidity ETH for user able to LONG, Ex: 80% of 1000 ETH = 800 ETH 
+    openInterestReserveFactorLongs: decimalToFloat(8, 1), // 80%, // Config % liquidity ETH for user able to LONG, Ex: 80% of 1000 ETH = 800 ETH 
     openInterestReserveFactorShorts: decimalToFloat(8, 1), // 80%, // Config % liquidity USDT for user able to SHORT, Ex: 80% of 1000 USDT = 800 USDT
 
     //#region MAX OI Config in Trade page
@@ -149,15 +144,17 @@ export const markets_config = {
     fundingDecreaseFactorPerSecond: decimalToFloat(0), // not applicable if thresholdForDecreaseFunding = 0
     minFundingFactorPerSecond: decimalToFloat(3, 10), // 0.00000003%, 0.000108% per hour, 0.95% per year
     maxFundingFactorPerSecond: decimalToFloat(1, 8), // 0.000001%,  0.0036% per hour, 31.5% per year
-    thresholdForStableFunding: decimalToFloat(5, 10), // (5, 2) => 5%, (5, 10) => 0.0000000005, cang cao so % per hours cang nho
+    thresholdForStableFunding: percentageToFloat("0%").div(SECONDS_PER_HOUR * 1), // if this config > 0, it will be funding factor instead of fundingFactor
     thresholdForDecreaseFunding: decimalToFloat(0), // 0%
 
-    fundingFactor: decimalToFloat(1, 10),
+    fundingFactor: percentageToFloat("1%").div(SECONDS_PER_HOUR * 1),
     fundingExponentFactor: decimalToFloat(1),
 
     //#region Borrowing factor config
-    borrowingFactorForLongs: decimalToFloat(625, 11), // 0.00000000625 * 80% = 0.000000005, 0.0000005% / second, 15.77% per year if the pool is 100% utilized
-    borrowingFactorForShorts: decimalToFloat(625, 11), // 0.00000000625 * 80% = 0.000000005, 0.0000005% / second, 15.77% per year if the pool is 100% utilized
+    borrowingFactorForLongs: percentageToFloat("1%").div(SECONDS_PER_HOUR * 1), // 0.00000000625 * 80% = 0.000000005, 0.0000005% / second, 15.77% per year if the pool is 10% utilized
+    borrowingFactorForShorts: percentageToFloat("1%").div(SECONDS_PER_HOUR * 1), // 0.00000000625 * 80% = 0.000000005, 0.0000005% / second, 15.77% per year if the pool is 100% utilized
+    // borrowingFactorForLongs: decimalToFloat(625, 11), // 0.00000000625 * 80% = 0.000000005, 0.0000005% / second, 15.77% per year if the pool is 100% utilized
+    // borrowingFactorForShorts: decimalToFloat(625, 11), // 0.00000000625 * 80% = 0.000000005, 0.0000005% / second, 15.77% per year if the pool is 100% utilized
 
     borrowingExponentFactorForLongs: decimalToFloat(15, 1), // 1.5
     borrowingExponentFactorForShorts: decimalToFloat(15, 1), // 1.5
