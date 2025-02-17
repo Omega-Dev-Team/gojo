@@ -116,7 +116,7 @@ mod Bank {
             // assert that caller is a controller
             let mut role_module: RoleModule::ContractState =
                 RoleModule::unsafe_new_contract_state();
-            role_module.only_controller();();
+            role_module.only_controller();
             self.transfer_out_internal(sender, token, receiver, amount);
         }
     }
