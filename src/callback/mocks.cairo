@@ -11,7 +11,11 @@ trait ICallbackMock<TContractState> {
 #[starknet::contract]
 mod CallbackMock {
     use satoru::callback::deposit_callback_receiver::interface::IDepositCallbackReceiver;
+    use satoru::callback::withdrawal_callback_receiver::interface::IWithdrawalCallbackReceiver;
+    use satoru::callback::order_callback_receiver::interface::IOrderCallbackReceiver;
     use satoru::deposit::deposit::Deposit;
+    use satoru::withdrawal::withdrawal::Withdrawal;
+    use satoru::order::order::Order;
     use satoru::event::event_utils::LogData;
 
     #[storage]
@@ -23,7 +27,6 @@ mod CallbackMock {
     fn constructor(ref self: ContractState) {
         self.counter.write(1);
     }
-
 
     #[abi(embed_v0)]
     impl ICallbackMockImpl of super::ICallbackMock<ContractState> {
@@ -42,6 +45,42 @@ mod CallbackMock {
 
         fn after_deposit_cancellation(
             ref self: ContractState, key: felt252, deposit: Deposit, log_data: Array<felt252>,
+        ) {
+            self.counter.write(self.get_counter() + 1);
+        }
+    }
+
+    #[abi(embed_v0)]
+    impl IWithdrawalCallbackReceiverImpl of IWithdrawalCallbackReceiver<ContractState> {
+        fn after_withdrawal_execution(
+            ref self: ContractState, key: felt252, withdrawal: Withdrawal, log_data: Array<felt252>,
+        ) {
+            self.counter.write(self.get_counter() + 1);
+        }
+
+        fn after_withdrawal_cancellation(
+            ref self: ContractState, key: felt252, withdrawal: Withdrawal, log_data: Array<felt252>,
+        ) {
+            self.counter.write(self.get_counter() + 1);
+        }
+    }
+
+    #[abi(embed_v0)]
+    impl IOrderCallbackReceiverImpl of IOrderCallbackReceiver<ContractState> {
+        fn after_order_execution(
+            ref self: ContractState, key: felt252, order: Order, log_data: Array<felt252>,
+        ) {
+            self.counter.write(self.get_counter() + 1);
+        }
+
+        fn after_order_cancellation(
+            ref self: ContractState, key: felt252, order: Order, log_data: Array<felt252>,
+        ) {
+            self.counter.write(self.get_counter() + 1);
+        }
+
+        fn after_order_frozen(
+            ref self: ContractState, key: felt252, order: Order, log_data: Array<felt252>,
         ) {
             self.counter.write(self.get_counter() + 1);
         }
