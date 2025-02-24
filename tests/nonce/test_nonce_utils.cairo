@@ -26,7 +26,7 @@ fn given_normal_conditions_when_nonce_utils_functions_then_works() {
     assert(key == 0x24bd38ceb23566640607e8fd6d1ef05cf308413863f984763744a3cfd428b1b, 'Invalid key');
 
     // *********************************************************************************************
-    // *                              TEARDOWN                                                     *
+    // *                              Teardown                                                     *
     // *********************************************************************************************
     teardown(data_store.contract_address);
 }

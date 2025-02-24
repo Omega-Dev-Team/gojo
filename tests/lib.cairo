@@ -28,5 +28,5 @@ mod deposit {
 
 #[cfg(test)]
 mod nonce {
-    mod test_nonce_utils;
+    mod test_nonce_util;
 }

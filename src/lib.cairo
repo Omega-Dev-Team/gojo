@@ -29,7 +29,8 @@ mod callback {
     }
 }
 
-// `chain` is a module that contains utility function for interacting with the chain and getting information.
+// `chain` is a module that contains utility function for interacting with the chain and getting
+// information.
 mod chain {
     mod chain;
 }
@@ -107,7 +108,8 @@ mod reader {
     mod reader;
 }
 
-// 'router' is a module where users utilize the router to initiate token transactions, exchanges, and transfers.
+// 'router' is a module where users utilize the router to initiate token transactions, exchanges,
+// and transfers.
 mod router {
     mod router;
     mod exchange_router;
