@@ -35,3 +35,8 @@ mod deposit {
 mod nonce {
     mod test_nonce_utils;
 }
+
+#[cfg(test)]
+mod liquidation {
+    mod test_liquidation;
+}
