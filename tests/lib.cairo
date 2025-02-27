@@ -30,3 +30,8 @@ mod deposit {
 mod nonce {
     mod test_nonce_utils;
 }
+
+#[cfg(test)]
+mod referral {
+    mod test_referral;
+}
