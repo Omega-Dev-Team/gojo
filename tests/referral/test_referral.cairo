@@ -84,3 +84,46 @@ fn test_get_referral_info() {
     assert(rebate == 0, 'Invalid rebate');
     assert(discount == 0, 'Invalid discount');
 }
+
+#[test]
+fn test_claim_affiliate_no_reward() {
+    let (data_store, event_emitter, _) = deploy_mock_contracts();
+    let account = contract_address_const::<1>();
+    let receiver = contract_address_const::<2>();
+    let market = contract_address_const::<3>();
+    let token = contract_address_const::<4>();
+    start_prank(data_store.contract_address, account);
+    let reward = referral_utils::claim_affiliate_reward(
+        data_store,
+        event_emitter,
+        market,
+        token,
+        account,
+        receiver
+    );
+    stop_prank(data_store.contract_address);
+    assert(reward == 0, 'Invalid reward');
+}
+
+#[test]
+fn test_claim_affiliate_reward() {
+    let (data_store, event_emitter, _) = deploy_mock_contracts();
+    let account = contract_address_const::<1>();
+    let receiver = contract_address_const::<2>();
+    let market = contract_address_const::<3>();
+    let token = contract_address_const::<4>();
+    let mock_reward = 1000;
+    let key: felt252 = keys::affiliate_reward_for_account_key(market, token, account);
+    data_store.set_u256(key, mock_reward);
+    start_prank(data_store.contract_address, account);
+    let reward = referral_utils::claim_affiliate_reward(
+        data_store,
+        event_emitter,
+        market,
+        token,
+        account,
+        receiver
+    );
+    stop_prank(data_store.contract_address);
+    assert(reward == mock_reward, 'Invalid reward');
+}
