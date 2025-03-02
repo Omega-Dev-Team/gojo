@@ -1,4 +1,9 @@
 #[cfg(test)]
+mod callback {
+    mod test_callback_utils;
+}
+
+#[cfg(test)]
 mod chain {
     mod test_chain;
 }
