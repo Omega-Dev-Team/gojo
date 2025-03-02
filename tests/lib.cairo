@@ -37,6 +37,11 @@ mod nonce {
 }
 
 #[cfg(test)]
+mod referral {
+    mod test_referral;
+}
+
+#[cfg(test)]
 mod liquidation {
     mod test_liquidation;
 }
