@@ -40,3 +40,11 @@ mod referral {
 mod liquidation {
     mod test_liquidation;
 }
+
+
+#[cfg(test)]
+mod withdrawal {
+    mod test_withdrawal;
+    mod test_withdrawal_utils;
+    mod test_withdrawal_vault;
+}
