@@ -26,12 +26,11 @@ trait IERC20<T> {
 mod MockERC20 {
     use starknet::{ContractAddress, get_caller_address};
     use core::zeroable::Zeroable;
-    use starknet::storage::{StoragePointerReadAccess, StoragePointerWriteAccess, Map, StoragePathEntry};
     
 
     #[storage]
     struct Storage {
-        balances: Map<ContractAddress, u256>,
+        balances: LegacyMap<ContractAddress, u256>,
         total_supply: u256,
     }
 
