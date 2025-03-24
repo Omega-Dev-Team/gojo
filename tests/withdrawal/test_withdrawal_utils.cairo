@@ -16,7 +16,7 @@ use satoru::oracle::{oracle::{IOracleDispatcher, IOracleDispatcherTrait}, oracle
 use satoru::pricing::{swap_pricing_utils, swap_pricing_utils::SwapFees};
 use satoru::swap::{swap_utils, swap_utils::SwapParams};
 use satoru::utils::{
-    calc, account_utils, error_utils, precision, starknet_utils, span32::Span32,
+    calc, account_utils, error_utils, precision, starknet_utils, span32::{Span32, Array32Trait},
     store_arrays::{StoreContractAddressArray, StoreU256Array}
 };
 use satoru::withdrawal::{
@@ -81,8 +81,8 @@ fn test_create_withdrawal_success() {
     let market = contract_address_const::<0x100>();
         
     // Create empty swap paths
-    let long_token_swap_path = ArrayTrait::<ContractAddress>::new().span32();
-    let short_token_swap_path = ArrayTrait::<ContractAddress>::new().span32();
+    let long_token_swap_path = Array32Trait::<ContractAddress>::span32(@ArrayTrait::new());
+    let short_token_swap_path = Array32Trait::<ContractAddress>::span32(@ArrayTrait::new());
         
     let params = CreateWithdrawalParams {
         receiver,
@@ -127,8 +127,8 @@ fn test_create_withdrawal_insufficient_fee() {
     let market = contract_address_const::<0x100>();
         
     // Create empty swap paths
-    let long_token_swap_path = ArrayTrait::<ContractAddress>::new().span32();
-    let short_token_swap_path = ArrayTrait::<ContractAddress>::new().span32();
+    let long_token_swap_path = Array32Trait::<ContractAddress>::span32(@ArrayTrait::new());
+    let short_token_swap_path = Array32Trait::<ContractAddress>::span32(@ArrayTrait::new());
         
     let params = CreateWithdrawalParams {
         receiver,
@@ -174,8 +174,8 @@ let (data_store, event_emitter, market_token, oracle, withdrawal_vault) = deploy
             callback_contract: contract_address_const::<0x202>(),
             ui_fee_receiver: contract_address_const::<0x203>(),
             market: market,
-            long_token_swap_path: ArrayTrait::<ContractAddress>::new().span32(),
-            short_token_swap_path: ArrayTrait::<ContractAddress>::new().span32(),
+            long_token_swap_path: Array32Trait::<ContractAddress>::span32(@ArrayTrait::new()),
+            short_token_swap_path: Array32Trait::<ContractAddress>::span32(@ArrayTrait::new()),
             market_token_amount: 100000000000000000_u256,
             min_long_token_amount: 50000000000000000_u256,
             min_short_token_amount: 50000000000000000_u256,
@@ -238,13 +238,14 @@ fn test_swap() {
     let key = 0x123;
     let ui_fee_receiver = contract_address_const::<0x203>();
     let min_oracle_block_numbers: Array<u64> = array![2000000_u64, 120000_u64, 100000_u64];
-    let min_oracle_block_numbers: Array<u64> = array![20000000_u64, 12000000_u64, 1000000_u64];
+    let max_oracle_block_numbers: Array<u64> = array![20000000_u64, 12000000_u64, 1000000_u64];
     let keeper = contract_address_const::<0x300>();
     let some_token = contract_address_const::<0x400>();
     let token_in = contract_address_const::<0x200>();
     let receiver = contract_address_const::<0x500>();
     let ui_fee_receiver = contract_address_const::<0x600>();
     let amount_in: u256 = 100000000000_u256;
+    let min_output_amount = 100000000000_u256;
 
     // create execute withdrawal paramas
     let params = ExecuteWithdrawalParams{
@@ -273,11 +274,11 @@ fn test_swap() {
         token_in,
         amount_in,
         swap_path,
-        min_output_amount: 100000000000_u256,
+        min_output_amount,
         receiver,
-        ui_fee_receiver,
+        ui_fee_receiver
     );
 
-    assert!(output_token == token_in, 'invalid token');
-    assert!(output_amount == amount_in, 'invalid amount');
+    assert(output_token == token_in, 'invalid token');
+    assert(output_amount == amount_in, 'invalid amount');
 }
