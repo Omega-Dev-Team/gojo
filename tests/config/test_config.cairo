@@ -24,11 +24,11 @@ fn setup() -> (
     let caller = contract_address_const::<1>();
 
     let role_store_class = declare('RoleStore');
-    let role_store = role_store_class.deploy(@ArrayTrait::new()).unwrap();
+    let role_store = role_store_class.deploy(@array![caller.into()]).unwrap();
     let role_store_dispatcher = IRoleStoreDispatcher { contract_address: role_store };
 
     let data_store_class = declare('DataStore');
-    let data_store = data_store_class.deploy(@ArrayTrait::new()).unwrap();
+    let data_store = data_store_class.deploy(@array![role_store.into()]).unwrap();
     let data_store_dispatcher = IDataStoreDispatcher { contract_address: data_store };
 
     let event_emitter_class = declare('EventEmitter');
