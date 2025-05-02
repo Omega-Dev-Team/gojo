@@ -16,7 +16,7 @@ use satoru::data::data_store::{IDataStoreDispatcher, IDataStoreDispatcherTrait};
 use satoru::deposit::deposit_vault::{IDepositVaultDispatcher, IDepositVaultDispatcherTrait};
 use satoru::role::role_store::{IRoleStoreDispatcher, IRoleStoreDispatcherTrait};
 use satoru::role::role;
-use satoru::tests_lib;
+use satoru::test_utils::tests_lib;
 use satoru::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
 
 // *********************************************************************************************
@@ -38,10 +38,11 @@ fn given_already_intialized_when_initialize_then_fails() {
 
 #[test]
 fn given_normal_conditions_when_transfer_out_then_works() {
-    let (_, receiver_address, _, data_store, deposit_vault, erc20) = setup();
+    let (sender_address, receiver_address, _, data_store, deposit_vault, erc20) = setup();
 
     let amount_to_transfer: u256 = 100;
-    deposit_vault.transfer_out(erc20.contract_address, receiver_address, amount_to_transfer);
+    deposit_vault
+        .transfer_out(sender_address, erc20.contract_address, receiver_address, amount_to_transfer);
 
     // check that the contract balance reduces
     let contract_balance = erc20.balance_of(deposit_vault.contract_address);
@@ -61,10 +62,11 @@ fn given_normal_conditions_when_transfer_out_then_works() {
 #[test]
 #[should_panic(expected: ('u256_sub Overflow',))]
 fn given_not_enough_token_when_transfer_out_then_fails() {
-    let (_, receiver_address, _, data_store, deposit_vault, erc20) = setup();
+    let (sender_address, receiver_address, _, data_store, deposit_vault, erc20) = setup();
 
     let amount_to_transfer: u256 = u256_from_felt252(INITIAL_TOKENS_MINTED + 1);
-    deposit_vault.transfer_out(erc20.contract_address, receiver_address, amount_to_transfer);
+    deposit_vault
+        .transfer_out(sender_address, erc20.contract_address, receiver_address, amount_to_transfer);
 
     teardown(data_store, deposit_vault);
 }
@@ -75,7 +77,7 @@ fn given_caller_has_no_controller_role_when_transfer_out_then_fails() {
     let (caller_address, receiver_address, _, data_store, deposit_vault, erc20) = setup();
     stop_prank(deposit_vault.contract_address);
     start_prank(deposit_vault.contract_address, receiver_address);
-    deposit_vault.transfer_out(erc20.contract_address, caller_address, 100_u256);
+    deposit_vault.transfer_out(receiver_address, erc20.contract_address, caller_address, 100_u256);
     teardown(data_store, deposit_vault);
 }
 
@@ -83,7 +85,13 @@ fn given_caller_has_no_controller_role_when_transfer_out_then_fails() {
 #[should_panic(expected: ('self_transfer_not_supported',))]
 fn given_receiver_is_contract_when_transfer_out_then_fails() {
     let (caller_address, receiver_address, _, data_store, deposit_vault, erc20) = setup();
-    deposit_vault.transfer_out(erc20.contract_address, deposit_vault.contract_address, 100_u256);
+    deposit_vault
+        .transfer_out(
+            deposit_vault.contract_address,
+            erc20.contract_address,
+            deposit_vault.contract_address,
+            100_u256
+        );
     teardown(data_store, deposit_vault);
 }
 
@@ -175,19 +183,35 @@ fn setup() -> (
     IERC20Dispatcher
 ) {
     // get caller_address, role store and data_store from tests_lib::setup()
-    let (caller_address, role_store, data_store) = tests_lib::setup();
+    let (
+        caller_address,
+        _,
+        _,
+        _,
+        _,
+        _,
+        role_store,
+        data_store,
+        _,
+        _,
+        _,
+        deposit_vault,
+        _,
+        _,
+        _,
+        _,
+        _,
+        _,
+        _,
+        _
+    ) =
+        tests_lib::setup();
 
     // get receiver_address
     let receiver_address: ContractAddress = 0x202.try_into().unwrap();
 
-    // deploy deposit vault
-    let deposit_vault_address = deploy_deposit_vault(
-        data_store.contract_address, role_store.contract_address
-    );
-    let deposit_vault = IDepositVaultDispatcher { contract_address: deposit_vault_address };
-
     // deploy erc20 token
-    let erc20_contract_address = deploy_erc20_token(deposit_vault_address);
+    let erc20_contract_address = deploy_erc20_token(deposit_vault.contract_address);
     let erc20 = IERC20Dispatcher { contract_address: erc20_contract_address };
 
     // start prank and give controller role to caller_address
@@ -236,6 +260,7 @@ fn deploy_erc20_token(deposit_vault_address: ContractAddress) -> ContractAddress
 // *                                     TEARDOWN                                              *
 // *********************************************************************************************
 fn teardown(data_store: IDataStoreDispatcher, deposit_vault: IDepositVaultDispatcher) {
-    tests_lib::teardown(data_store.contract_address);
+    stop_prank(data_store.contract_address);
     stop_prank(deposit_vault.contract_address);
 }
+

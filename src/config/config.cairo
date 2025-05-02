@@ -35,6 +35,14 @@ trait IConfig<TContractState> {
     fn set_felt252(
         ref self: TContractState, base_key: felt252, data: Array<felt252>, value: felt252,
     );
+
+    /// Get the full key.
+    /// # Arguments
+    /// * `base_key` - The base key.
+    /// * `data` - The additional data to be combined with the base key.
+    /// # Returns
+    /// * `full_key` - The full key.
+    fn get_full_key(self: @TContractState, base_key: felt252, data: Array<felt252>) -> felt252;
 }
 
 #[starknet::contract]
@@ -139,6 +147,19 @@ mod Config {
             let full_key = self.get_full_key(base_key, data);
             // Set the value.
             self.data_store.read().set_felt252(full_key, value);
+        }
+
+        // TODO: Confirm this external function does not compromise sensitive information
+        fn get_full_key(self: @ContractState, base_key: felt252, data: Array<felt252>) -> felt252 {
+            if data.len() == 0 {
+                return base_key;
+            }
+            // TODO: Remove this clone and find a more efficient way to do this.
+            let mut copied_data = data.clone();
+            let mut full_key = array![];
+            full_key.append(base_key);
+            full_key.append_all(ref copied_data);
+            poseidon_hash_span(full_key.span())
         }
     }
 
@@ -255,23 +276,22 @@ mod Config {
             // Check that the base key is allowed.
             assert(self.allowed_based_keys.read(base_key), ConfigError::INVALID_BASE_KEY);
         }
-
-        /// Get the full key.
-        /// # Arguments
-        /// * `base_key` - The base key.
-        /// * `data` - The additional data to be combined with the base key.
-        /// # Returns
-        /// * `full_key` - The full key.
-        fn get_full_key(self: @ContractState, base_key: felt252, data: Array<felt252>) -> felt252 {
-            if data.len() == 0 {
-                return base_key;
-            }
-            // TODO: Remove this clone and find a more efficient way to do this.
-            let mut copied_data = data.clone();
-            let mut full_key = array![];
-            full_key.append(base_key);
-            full_key.append_all(ref copied_data);
-            poseidon_hash_span(full_key.span())
-        }
+    /// Get the full key.
+    /// # Arguments
+    /// * `base_key` - The base key.
+    /// * `data` - The additional data to be combined with the base key.
+    /// # Returns
+    /// * `full_key` - The full key.
+    // fn get_full_key(self: @ContractState, base_key: felt252, data: Array<felt252>) -> felt252 {
+    //     if data.len() == 0 {
+    //         return base_key;
+    //     }
+    //     // TODO: Remove this clone and find a more efficient way to do this.
+    //     let mut copied_data = data.clone();
+    //     let mut full_key = array![];
+    //     full_key.append(base_key);
+    //     full_key.append_all(ref copied_data);
+    //     poseidon_hash_span(full_key.span())
+    // }
     }
 }

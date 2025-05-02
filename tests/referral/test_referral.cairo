@@ -10,10 +10,13 @@ use satoru::mock::referral_storage::{IReferralStorageDispatcher, IReferralStorag
 use satoru::data::keys;
 
 
-fn deploy_mock_contracts() -> (IDataStoreDispatcher, IEventEmitterDispatcher, IReferralStorageDispatcher) {
+fn deploy_mock_contracts() -> (
+    IDataStoreDispatcher, IEventEmitterDispatcher, IReferralStorageDispatcher
+) {
+    let admin = contract_address_const::<1>();
     // Deploy mock contracts
     let role_store_class = declare('RoleStore');
-    let role_store = role_store_class.deploy(@ArrayTrait::new()).unwrap();
+    let role_store = role_store_class.deploy(@array![admin.into()]).unwrap();
     let data_store = declare('DataStore');
     let data_store_address = data_store.deploy(@array![role_store.into()]).unwrap();
 
@@ -22,11 +25,15 @@ fn deploy_mock_contracts() -> (IDataStoreDispatcher, IEventEmitterDispatcher, IR
     let event_emitter_address = event_emitter.deploy(@calldata).unwrap();
 
     let referral_storage_class = declare('ReferralStorage');
-    let referral_storage_address = referral_storage_class.deploy(@array![event_emitter_address.into()]).unwrap();
+    let referral_storage_address = referral_storage_class
+        .deploy(@array![event_emitter_address.into()])
+        .unwrap();
 
     let data_store = IDataStoreDispatcher { contract_address: data_store_address };
     let event_emitter = IEventEmitterDispatcher { contract_address: event_emitter_address };
-    let referral_storage = IReferralStorageDispatcher { contract_address: referral_storage_address };
+    let referral_storage = IReferralStorageDispatcher {
+        contract_address: referral_storage_address
+    };
 
     (data_store, event_emitter, referral_storage)
 }
@@ -37,14 +44,8 @@ fn test_set_trader_referral_code() {
     let account = contract_address_const::<1>();
     let code: felt252 = 'Hello';
     start_prank(referral_storage.contract_address, account);
-    referral_utils::set_trader_referral_code(
-        referral_storage,
-        account,
-        code
-    );
-    let (account_code, _) = referral_storage.get_trader_referral_info(
-        account
-    );
+    referral_utils::set_trader_referral_code(referral_storage, account, code);
+    let (account_code, _) = referral_storage.get_trader_referral_info(account);
     stop_prank(referral_storage.contract_address);
     assert(account_code == code, 'invalid code');
 }
@@ -59,12 +60,7 @@ fn test_increment_affiliate_reward() {
     let key = keys::affiliate_reward_for_account_key(market, token, account);
     start_prank(data_store.contract_address, account);
     referral_utils::increment_affiliate_reward(
-        data_store,
-        event_emitter,
-        market,
-        token,
-        account,
-        delta
+        data_store, event_emitter, market, token, account, delta
     );
     stop_prank(data_store.contract_address);
     let data_total = data_store.get_u256(key);
@@ -76,8 +72,7 @@ fn test_get_referral_info() {
     let (_, _, referral_storage) = deploy_mock_contracts();
     let account = contract_address_const::<1>();
     let (code, affiliate, rebate, discount) = referral_utils::get_referral_info(
-        referral_storage,
-        account
+        referral_storage, account
     );
     assert(code == 0, 'Invalid code');
     assert(affiliate == contract_address_const::<0>(), 'Invalid affiliate');
@@ -94,12 +89,7 @@ fn test_claim_affiliate_no_reward() {
     let token = contract_address_const::<4>();
     start_prank(data_store.contract_address, account);
     let reward = referral_utils::claim_affiliate_reward(
-        data_store,
-        event_emitter,
-        market,
-        token,
-        account,
-        receiver
+        data_store, event_emitter, market, token, account, receiver
     );
     stop_prank(data_store.contract_address);
     assert(reward == 0, 'Invalid reward');
@@ -117,12 +107,7 @@ fn test_claim_affiliate_reward() {
     data_store.set_u256(key, mock_reward);
     start_prank(data_store.contract_address, account);
     let reward = referral_utils::claim_affiliate_reward(
-        data_store,
-        event_emitter,
-        market,
-        token,
-        account,
-        receiver
+        data_store, event_emitter, market, token, account, receiver
     );
     stop_prank(data_store.contract_address);
     assert(reward == mock_reward, 'Invalid reward');
