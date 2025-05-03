@@ -18,7 +18,12 @@ mod config {
 mod deposit {
     mod test_deposit;
     mod test_deposit_utils;
-    mod test_deposit_vault; 
+    mod test_deposit_vault;
+}
+
+#[cfg(test)]
+mod gas {
+    mod test_gas_utils;
 }
 
 #[cfg(test)]
