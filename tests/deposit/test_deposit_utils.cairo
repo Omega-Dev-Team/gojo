@@ -61,7 +61,9 @@ mod mock_data_store {
 #[starknet::interface]
 trait IMockEventEmitter<TContractState> {
     fn emit_deposit_created(ref self: TContractState, key: felt252, deposit: Deposit);
-    fn emit_deposit_cancelled(ref self: TContractState, key: felt252, reason: felt252, reason_bytes: Span<felt252>);
+    fn emit_deposit_cancelled(
+        ref self: TContractState, key: felt252, reason: felt252, reason_bytes: Span<felt252>
+    );
 }
 
 #[starknet::contract]
@@ -75,7 +77,9 @@ mod mock_event_emitter {
     #[external(v0)]
     impl EventEmitter of super::IMockEventEmitter<ContractState> {
         fn emit_deposit_created(ref self: ContractState, key: felt252, deposit: Deposit) {}
-        fn emit_deposit_cancelled(ref self: ContractState, key: felt252, reason: felt252, reason_bytes: Span<felt252>) {}
+        fn emit_deposit_cancelled(
+            ref self: ContractState, key: felt252, reason: felt252, reason_bytes: Span<felt252>
+        ) {}
     }
 }
 
@@ -114,7 +118,9 @@ mod mock_deposit_vault {
     }
 }
 
-fn deploy_mock_contracts() -> (IDataStoreDispatcher, IEventEmitterDispatcher, IDepositVaultDispatcher) {
+fn deploy_mock_contracts() -> (
+    IDataStoreDispatcher, IEventEmitterDispatcher, IDepositVaultDispatcher
+) {
     // Deploy mock contracts
     let data_store = declare('mock_data_store');
     let mut calldata = ArrayTrait::new();
@@ -142,10 +148,10 @@ fn test_create_deposit() {
     let receiver = contract_address_const::<2>();
     let callback = contract_address_const::<3>();
     let market = contract_address_const::<4>();
-    
+
     let mut long_path = ArrayTrait::new();
     long_path.append(contract_address_const::<5>());
-    
+
     let mut short_path = ArrayTrait::new();
     short_path.append(contract_address_const::<6>());
 
@@ -165,9 +171,9 @@ fn test_create_deposit() {
 
     // Impersonate caller account with required role
     start_prank(data_store.contract_address, account);
-    
+
     let key = create_deposit(data_store, event_emitter, deposit_vault, account, params);
-    
+
     stop_prank(data_store.contract_address);
 
     let deposit = data_store.get_deposit(key);
@@ -191,14 +197,7 @@ fn test_cancel_deposit() {
     start_prank(data_store.contract_address, keeper);
 
     cancel_deposit(
-        data_store,
-        event_emitter,
-        deposit_vault,
-        key,
-        keeper,
-        starting_gas,
-        reason,
-        reason_bytes
+        data_store, event_emitter, deposit_vault, key, keeper, starting_gas, reason, reason_bytes
     );
 
     stop_prank(data_store.contract_address);
@@ -227,13 +226,7 @@ fn test_create_deposit_zero_amounts() {
     let account = contract_address_const::<1>();
     start_prank(data_store.contract_address, account);
 
-    create_deposit(
-        data_store,
-        event_emitter,
-        deposit_vault,
-        account,
-        params
-    );
+    create_deposit(data_store, event_emitter, deposit_vault, account, params);
 
     stop_prank(data_store.contract_address);
 }
