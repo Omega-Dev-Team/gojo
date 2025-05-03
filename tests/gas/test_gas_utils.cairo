@@ -11,3 +11,13 @@ use satoru::gas::gas_utils::{
     estimate_execute_order_gas_limit, estimate_execute_increase_order_gas_limit,
     estimate_execute_decrease_order_gas_limit, estimate_execute_swap_order_gas_limit,
 };
+
+#[test]
+fn test_get_min_handle_execution_error_gas() {
+    let (_, _, _, _, _, _, _, data_store, _, _, _, _, _, _, _, _, _, _, _, _,) = setup();
+
+    let min_handle_execution_error_gas = get_min_handle_execution_error_gas(data_store);
+    assert(
+        min_handle_execution_error_gas == 0, 'Invalid error gas'
+    );
+}
