@@ -21,3 +21,13 @@ fn test_get_min_handle_execution_error_gas() {
         min_handle_execution_error_gas == 0, 'Invalid error gas'
     );
 }
+
+#[test]
+fn test_get_execution_gas() {
+    let (_, _, _, _, _, _, _, data_store, _, _, _, _, _, _, _, _, _, _, _, _,) = setup();
+
+    let execution_gas = get_execution_gas(data_store, 1000);
+    let min_handle_execution_error_gas = get_min_handle_execution_error_gas(data_store);
+    let expected_gas = 1000 - min_handle_execution_error_gas;
+    assert(execution_gas == expected_gas, 'Invalid execution gas');
+}
