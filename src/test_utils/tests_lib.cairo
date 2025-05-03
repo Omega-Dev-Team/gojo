@@ -345,16 +345,16 @@ fn setup_contracts() -> (
     );
     let exchange_router = IExchangeRouterDispatcher { contract_address: exchange_router_address };
 
-    let bank_address = deploy_bank(data_store_address, role_store_address);
+    // let bank_address = deploy_bank(data_store_address, role_store_address);
 
-    //Create a safe dispatcher to interact with the Bank contract.
-    let bank = IBankDispatcher { contract_address: bank_address };
+    // //Create a safe dispatcher to interact with the Bank contract.
+    // let bank = IBankDispatcher { contract_address: bank_address };
 
-    // Deploy the strict bank contract
-    let strict_bank_address = deploy_strict_bank(data_store_address, role_store_address);
+    // // Deploy the strict bank contract
+    // let strict_bank_address = deploy_strict_bank(data_store_address, role_store_address);
 
-    //Create a safe dispatcher to interact with the StrictBank contract.
-    let strict_bank = IStrictBankDispatcher { contract_address: strict_bank_address };
+    // //Create a safe dispatcher to interact with the StrictBank contract.
+    // let strict_bank = IStrictBankDispatcher { contract_address: strict_bank_address };
 
     let reader_address = deploy_reader();
     let reader = IReaderDispatcher { contract_address: reader_address };
