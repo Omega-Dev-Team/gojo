@@ -192,9 +192,15 @@ fn test_pay_execution_fee_withdrawal() {
         refund_receiver
     );
 }
-// #[test]
-// fn test_validate_execution_fee() {}
 
+#[test]
+fn test_validate_execution_fee() {
+    let (_, _, _, _, _, _, _, data_store, _, _, _, _, _, _, _, _, _, _, _, _,) = setup();
+    let estimated_gas_limit = 1000;
+    let execution_fee = 1000;
+
+    validate_execution_fee(data_store, estimated_gas_limit, execution_fee);
+}
 // #[test]
 // fn test_adjust_gas_usage() {}
 
