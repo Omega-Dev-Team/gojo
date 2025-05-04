@@ -48,3 +48,8 @@ mod withdrawal {
     mod test_withdrawal_utils;
     mod test_withdrawal_vault;
 }
+
+#[cfg(test)]
+mod price {
+    mod price_test;
+}
