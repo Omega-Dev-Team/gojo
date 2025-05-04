@@ -6,6 +6,8 @@ use satoru::data::data_store::{IDataStoreDispatcher, IDataStoreDispatcherTrait};
 use satoru::bank::bank::{IBankDispatcher, IBankDispatcherTrait};
 use satoru::role::role_store::{IRoleStoreDispatcher, IRoleStoreDispatcherTrait};
 use satoru::test_utils::tests_lib::{setup, teardown, deploy_bank};
+use satoru::utils::span32::Array32Trait;
+use satoru::deposit::deposit::Deposit;
 use satoru::gas::gas_utils::{
     get_min_handle_execution_error_gas, get_execution_gas, pay_execution_fee,
     pay_execution_fee_deposit, pay_execution_fee_order, pay_execution_fee_withdrawal,
@@ -218,9 +220,31 @@ fn test_adjust_gas_limit_for_estimate() {
     adjust_gas_limit_for_estimate(data_store, estimated_gas_limit);
 }
 
-// #[test]
-// fn test_estimate_execute_deposit_gas_limit() {}
+#[test]
+fn test_estimate_execute_deposit_gas_limit() {
+    let (_, _, _, _, _, _, _, data_store, _, _, _, _, _, _, _, _, _, _, _, _,) = setup();
 
+    let deposit = Deposit {
+        key: 0,
+        account: contract_address_const::<0>(),
+        receiver: contract_address_const::<0>(),
+        callback_contract: contract_address_const::<0>(),
+        ui_fee_receiver: contract_address_const::<0>(),
+        market: contract_address_const::<0>(),
+        initial_long_token: contract_address_const::<0>(),
+        initial_short_token: contract_address_const::<0>(),
+        long_token_swap_path: Array32Trait::<ContractAddress>::span32(@ArrayTrait::new()),
+        short_token_swap_path: Array32Trait::<ContractAddress>::span32(@ArrayTrait::new()),
+        initial_long_token_amount: 0,
+        initial_short_token_amount: 0,
+        min_market_tokens: 0,
+        updated_at_block: 0,
+        execution_fee: 0,
+        callback_gas_limit: 0,
+    };
+
+    estimate_execute_deposit_gas_limit(data_store, deposit);
+}
 // #[test]
 // fn test_estimate_execute_withdrawal_gas_limit() {}
 
