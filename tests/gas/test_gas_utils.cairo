@@ -210,8 +210,13 @@ fn test_adjust_gas_usage() {
     adjust_gas_usage(data_store, gas_used);
 }
 
-// #[test]
-// fn test_adjust_gas_limit_for_estimate() {}
+#[test]
+fn test_adjust_gas_limit_for_estimate() {
+    let (_, _, _, _, _, _, _, data_store, _, _, _, _, _, _, _, _, _, _, _, _,) = setup();
+    let estimated_gas_limit = 1000;
+
+    adjust_gas_limit_for_estimate(data_store, estimated_gas_limit);
+}
 
 // #[test]
 // fn test_estimate_execute_deposit_gas_limit() {}
