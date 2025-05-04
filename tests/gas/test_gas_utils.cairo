@@ -20,18 +20,17 @@ fn test_get_min_handle_execution_error_gas() {
     let (_, _, _, _, _, _, _, data_store, _, _, _, _, _, _, _, _, _, _, _, _,) = setup();
 
     let min_handle_execution_error_gas = get_min_handle_execution_error_gas(data_store);
-    assert(min_handle_execution_error_gas == 0, 'Invalid error gas');
+    assert(min_handle_execution_error_gas == 0x0, 'Invalid error gas');
 }
 
 #[test]
 fn test_get_execution_gas() {
     let (_, _, _, _, _, _, _, data_store, _, _, _, _, _, _, _, _, _, _, _, _,) = setup();
-
     let starting_gas = 1000;
     let execution_gas = get_execution_gas(data_store, starting_gas);
     let min_handle_execution_error_gas = get_min_handle_execution_error_gas(data_store);
-    print(array![min_handle_execution_error_gas.try_into().unwrap()]);
     let expected_gas = starting_gas - min_handle_execution_error_gas;
+
     assert(execution_gas == expected_gas, 'Invalid execution gas');
 }
 
@@ -60,7 +59,6 @@ fn test_pay_execution_fee() {
         _,
     ) =
         setup();
-
     let bank = IBankDispatcher {
         contract_address: deploy_bank(data_store_address, role_store_address)
     };
@@ -68,8 +66,7 @@ fn test_pay_execution_fee() {
     let starting_gas = 1000;
     let admin: ContractAddress = 123.try_into().unwrap();
     let user: ContractAddress = 456.try_into().unwrap();
-    // let event_spy = EventSpy::new();
-    // let event_emitter = event_spy.get_event_emitter();
+
     role_store.grant_role(test_address(), 'CONTROLLER');
     pay_execution_fee(data_store, event_emitter, bank, execution_fee, starting_gas, admin, user);
 }
