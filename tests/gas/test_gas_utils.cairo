@@ -201,8 +201,14 @@ fn test_validate_execution_fee() {
 
     validate_execution_fee(data_store, estimated_gas_limit, execution_fee);
 }
-// #[test]
-// fn test_adjust_gas_usage() {}
+
+#[test]
+fn test_adjust_gas_usage() {
+    let (_, _, _, _, _, _, _, data_store, _, _, _, _, _, _, _, _, _, _, _, _,) = setup();
+    let gas_used = 1000;
+
+    adjust_gas_usage(data_store, gas_used);
+}
 
 // #[test]
 // fn test_adjust_gas_limit_for_estimate() {}
