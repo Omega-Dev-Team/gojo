@@ -1,5 +1,7 @@
 use starknet::{ContractAddress, contract_address_const};
-use snforge_std::{start_prank, stop_prank, forge_print::print, PrintTrait, spy_events, EventSpy, test_address};
+use snforge_std::{
+    start_prank, stop_prank, forge_print::print, PrintTrait, spy_events, EventSpy, test_address
+};
 use satoru::data::data_store::{IDataStoreDispatcher, IDataStoreDispatcherTrait};
 use satoru::bank::bank::{IBankDispatcher, IBankDispatcherTrait};
 use satoru::role::role_store::{IRoleStoreDispatcher, IRoleStoreDispatcherTrait};
@@ -69,7 +71,74 @@ fn test_pay_execution_fee() {
     // let event_spy = EventSpy::new();
     // let event_emitter = event_spy.get_event_emitter();
     role_store.grant_role(test_address(), 'CONTROLLER');
-    pay_execution_fee(
-        data_store, event_emitter, bank, execution_fee, starting_gas, admin, user
-    );
+    pay_execution_fee(data_store, event_emitter, bank, execution_fee, starting_gas, admin, user);
 }
+
+#[test]
+fn test_pay_execution_fee_deposit() {
+    let (
+        _,
+        _,
+        _,
+        _,
+        _,
+        _,
+        role_store,
+        data_store,
+        event_emitter,
+        _,
+        _,
+        deposit_vault,
+        _,
+        _,
+        _,
+        _,
+        _,
+        _,
+        _,
+        _,
+    ) =
+        setup();
+
+    let execution_fee = 1000;
+    let starting_gas = 1000;
+    let keeper: ContractAddress = 123.try_into().unwrap();
+    let refund_receiver: ContractAddress = 456.try_into().unwrap();
+
+    role_store.grant_role(test_address(), 'CONTROLLER');
+    pay_execution_fee_deposit(data_store, event_emitter, deposit_vault, execution_fee, starting_gas, keeper, refund_receiver);
+}
+// #[test]
+// fn test_pay_execution_fee_order() {}
+
+// #[test]
+// fn test_pay_execution_fee_withdrawal() {}
+
+// #[test]
+// fn test_validate_execution_fee() {}
+
+// #[test]
+// fn test_adjust_gas_usage() {}
+
+// #[test]
+// fn test_adjust_gas_limit_for_estimate() {}
+
+// #[test]
+// fn test_estimate_execute_deposit_gas_limit() {}
+
+// #[test]
+// fn test_estimate_execute_withdrawal_gas_limit() {}
+
+// #[test]
+// fn test_estimate_execute_order_gas_limit() {}
+
+// #[test]
+// fn test_estimate_execute_increase_order_gas_limit() {}
+
+// #[test]
+// fn test_estimate_execute_decrease_order_gas_limit() {}
+
+// #[test]
+// fn test_estimate_execute_swap_order_gas_limit() {}
+
+
