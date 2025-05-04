@@ -153,9 +153,48 @@ fn test_pay_execution_fee_order() {
         data_store, event_emitter, order_vault, execution_fee, starting_gas, keeper, refund_receiver
     );
 }
-// #[test]
-// fn test_pay_execution_fee_withdrawal() {}
 
+#[test]
+fn test_pay_execution_fee_withdrawal() {
+    let (
+        _,
+        _,
+        _,
+        _,
+        _,
+        _,
+        role_store,
+        data_store,
+        event_emitter,
+        _,
+        _,
+        _,
+        _,
+        _,
+        _,
+        _,
+        _,
+        _,
+        withdrawal_vault,
+        _,
+    ) =
+        setup();
+    let execution_fee = 1000;
+    let starting_gas = 1000;
+    let keeper: ContractAddress = 123.try_into().unwrap();
+    let refund_receiver: ContractAddress = 456.try_into().unwrap();
+
+    role_store.grant_role(test_address(), 'CONTROLLER');
+    pay_execution_fee_withdrawal(
+        data_store,
+        event_emitter,
+        withdrawal_vault,
+        execution_fee,
+        starting_gas,
+        keeper,
+        refund_receiver
+    );
+}
 // #[test]
 // fn test_validate_execution_fee() {}
 
