@@ -100,7 +100,6 @@ fn test_pay_execution_fee_deposit() {
         _,
     ) =
         setup();
-
     let execution_fee = 1000;
     let starting_gas = 1000;
     let keeper: ContractAddress = 123.try_into().unwrap();
@@ -143,7 +142,6 @@ fn test_pay_execution_fee_order() {
         _,
     ) =
         setup();
-
     let execution_fee = 1000;
     let starting_gas = 1000;
     let keeper: ContractAddress = 123.try_into().unwrap();
@@ -225,7 +223,6 @@ fn test_adjust_gas_limit_for_estimate() {
 #[test]
 fn test_estimate_execute_deposit_gas_limit() {
     let (_, _, _, _, _, _, _, data_store, _, _, _, _, _, _, _, _, _, _, _, _,) = setup();
-
     let deposit = Deposit {
         key: 0,
         account: contract_address_const::<0>(),
