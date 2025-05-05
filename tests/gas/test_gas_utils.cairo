@@ -242,7 +242,8 @@ fn test_estimate_execute_deposit_gas_limit() {
         callback_gas_limit: 0,
     };
 
-    estimate_execute_deposit_gas_limit(data_store, deposit);
+    let estimate = estimate_execute_deposit_gas_limit(data_store, deposit);
+    assert(estimate == 0, 'Invalid deposit gas limit');
 }
 
 #[test]
@@ -265,7 +266,8 @@ fn test_estimate_execute_withdrawal_gas_limit() {
         callback_gas_limit: 0,
     };
 
-    estimate_execute_withdrawal_gas_limit(data_store, withdrawal);
+    let estimate = estimate_execute_withdrawal_gas_limit(data_store, withdrawal);
+    assert(estimate == 0, 'Invalid withdrawal gas limit');
 }
 
 #[test]
@@ -294,7 +296,8 @@ fn test_estimate_execute_order_gas_limit() {
         is_frozen: true,
     };
 
-    estimate_execute_order_gas_limit(data_store, @order);
+    let estimate = estimate_execute_order_gas_limit(data_store, @order);
+    assert(estimate == 0, 'Invalid order gas limit');
 }
 
 #[test]
@@ -323,7 +326,8 @@ fn test_estimate_execute_increase_order_gas_limit() {
         is_frozen: true,
     };
 
-    estimate_execute_increase_order_gas_limit(data_store, order);
+    let estimate = estimate_execute_increase_order_gas_limit(data_store, order);
+    assert(estimate == 0, 'Invalid inc order gas limit');
 }
 
 #[test]
@@ -352,7 +356,8 @@ fn test_estimate_execute_decrease_order_gas_limit() {
         is_frozen: true,
     };
 
-    estimate_execute_decrease_order_gas_limit(data_store, order);
+    let estimate = estimate_execute_decrease_order_gas_limit(data_store, order);
+    assert(estimate == 0, 'Invalid dec order gas limit');
 }
 
 #[test]
@@ -381,5 +386,6 @@ fn test_estimate_execute_swap_order_gas_limit() {
         is_frozen: true,
     };
 
-    estimate_execute_swap_order_gas_limit(data_store, order);
+    let estimate = estimate_execute_swap_order_gas_limit(data_store, order);
+    assert(estimate == 0, 'Invalid swap order gas limit');
 }
