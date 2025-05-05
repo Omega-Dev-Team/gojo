@@ -11,7 +11,12 @@ fn test_default_withdrawal() {
     assert(default_withdrawal.min_short_token_amount == 0, 'invalid min_short_token_amount');
     assert(default_withdrawal.account == default_contract_address, 'invalid account');
     assert(default_withdrawal.receiver == default_contract_address, 'invalid receiver');
-    assert(default_withdrawal.callback_contract == default_contract_address, 'invalid callback_contract');
-    assert(default_withdrawal.ui_fee_receiver == default_contract_address, 'invalid ui_fee_receiver');
+    assert(
+        default_withdrawal.callback_contract == default_contract_address,
+        'invalid callback_contract'
+    );
+    assert(
+        default_withdrawal.ui_fee_receiver == default_contract_address, 'invalid ui_fee_receiver'
+    );
     assert(default_withdrawal.market == default_contract_address, 'invalid market');
 }

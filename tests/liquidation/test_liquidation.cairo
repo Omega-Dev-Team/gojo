@@ -213,4 +213,5 @@ fn test_only_controller_can_create_liquidation_order() {
         data_store, event_emitter, admin, market, collateral_token, false
     );
     stop_prank(data_store.contract_address);
+    );
 }
