@@ -9,6 +9,7 @@ use satoru::test_utils::tests_lib::{setup, teardown, deploy_bank};
 use satoru::utils::span32::Array32Trait;
 use satoru::deposit::deposit::Deposit;
 use satoru::withdrawal::withdrawal::Withdrawal;
+use satoru::order::order::{Order, OrderType, DecreasePositionSwapType};
 use satoru::gas::gas_utils::{
     get_min_handle_execution_error_gas, get_execution_gas, pay_execution_fee,
     pay_execution_fee_deposit, pay_execution_fee_order, pay_execution_fee_withdrawal,
@@ -269,16 +270,119 @@ fn test_estimate_execute_withdrawal_gas_limit() {
 
     estimate_execute_withdrawal_gas_limit(data_store, withdrawal);
 }
-// #[test]
-// fn test_estimate_execute_order_gas_limit() {}
 
-// #[test]
-// fn test_estimate_execute_increase_order_gas_limit() {}
+#[test]
+fn test_estimate_execute_order_gas_limit() {
+    let (_, _, _, _, _, _, _, data_store, _, _, _, _, _, _, _, _, _, _, _, _,) = setup();
+    let order = Order {
+        key: 0,
+        decrease_position_swap_type: DecreasePositionSwapType::NoSwap,
+        order_type: OrderType::MarketSwap,
+        account: contract_address_const::<0>(),
+        receiver: contract_address_const::<0>(),
+        callback_contract: contract_address_const::<0>(),
+        ui_fee_receiver: contract_address_const::<0>(),
+        market: contract_address_const::<0>(),
+        initial_collateral_token: contract_address_const::<0>(),
+        swap_path: Array32Trait::<ContractAddress>::span32(@ArrayTrait::new()),
+        size_delta_usd: 0,
+        initial_collateral_delta_amount: 0,
+        trigger_price: 0,
+        acceptable_price: 0,
+        execution_fee: 0,
+        callback_gas_limit: 0,
+        min_output_amount: 0,
+        updated_at_block: 0,
+        is_long: true,
+        is_frozen: true,
+    };
 
-// #[test]
-// fn test_estimate_execute_decrease_order_gas_limit() {}
+    estimate_execute_order_gas_limit(data_store, @order);
+}
 
-// #[test]
-// fn test_estimate_execute_swap_order_gas_limit() {}
+#[test]
+fn test_estimate_execute_increase_order_gas_limit() {
+    let (_, _, _, _, _, _, _, data_store, _, _, _, _, _, _, _, _, _, _, _, _,) = setup();
+    let order = Order {
+        key: 0,
+        decrease_position_swap_type: DecreasePositionSwapType::NoSwap,
+        order_type: OrderType::MarketSwap,
+        account: contract_address_const::<0>(),
+        receiver: contract_address_const::<0>(),
+        callback_contract: contract_address_const::<0>(),
+        ui_fee_receiver: contract_address_const::<0>(),
+        market: contract_address_const::<0>(),
+        initial_collateral_token: contract_address_const::<0>(),
+        swap_path: Array32Trait::<ContractAddress>::span32(@ArrayTrait::new()),
+        size_delta_usd: 0,
+        initial_collateral_delta_amount: 0,
+        trigger_price: 0,
+        acceptable_price: 0,
+        execution_fee: 0,
+        callback_gas_limit: 0,
+        min_output_amount: 0,
+        updated_at_block: 0,
+        is_long: true,
+        is_frozen: true,
+    };
 
+    estimate_execute_increase_order_gas_limit(data_store, order);
+}
 
+#[test]
+fn test_estimate_execute_decrease_order_gas_limit() {
+    let (_, _, _, _, _, _, _, data_store, _, _, _, _, _, _, _, _, _, _, _, _,) = setup();
+    let order = Order {
+        key: 0,
+        decrease_position_swap_type: DecreasePositionSwapType::NoSwap,
+        order_type: OrderType::MarketSwap,
+        account: contract_address_const::<0>(),
+        receiver: contract_address_const::<0>(),
+        callback_contract: contract_address_const::<0>(),
+        ui_fee_receiver: contract_address_const::<0>(),
+        market: contract_address_const::<0>(),
+        initial_collateral_token: contract_address_const::<0>(),
+        swap_path: Array32Trait::<ContractAddress>::span32(@ArrayTrait::new()),
+        size_delta_usd: 0,
+        initial_collateral_delta_amount: 0,
+        trigger_price: 0,
+        acceptable_price: 0,
+        execution_fee: 0,
+        callback_gas_limit: 0,
+        min_output_amount: 0,
+        updated_at_block: 0,
+        is_long: true,
+        is_frozen: true,
+    };
+
+    estimate_execute_decrease_order_gas_limit(data_store, order);
+}
+
+#[test]
+fn test_estimate_execute_swap_order_gas_limit() {
+    let (_, _, _, _, _, _, _, data_store, _, _, _, _, _, _, _, _, _, _, _, _,) = setup();
+    let order = Order {
+        key: 0,
+        decrease_position_swap_type: DecreasePositionSwapType::NoSwap,
+        order_type: OrderType::MarketSwap,
+        account: contract_address_const::<0>(),
+        receiver: contract_address_const::<0>(),
+        callback_contract: contract_address_const::<0>(),
+        ui_fee_receiver: contract_address_const::<0>(),
+        market: contract_address_const::<0>(),
+        initial_collateral_token: contract_address_const::<0>(),
+        swap_path: Array32Trait::<ContractAddress>::span32(@ArrayTrait::new()),
+        size_delta_usd: 0,
+        initial_collateral_delta_amount: 0,
+        trigger_price: 0,
+        acceptable_price: 0,
+        execution_fee: 0,
+        callback_gas_limit: 0,
+        min_output_amount: 0,
+        updated_at_block: 0,
+        is_long: true,
+        is_frozen: true,
+    };
+
+    estimate_execute_swap_order_gas_limit(data_store, order);
+}
