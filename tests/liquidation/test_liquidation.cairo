@@ -79,7 +79,7 @@ fn setup_role() {
 }
 
 #[test]
-#[should_panic]
+#[should_panic(expected: ('unauthorized_access',))]
 fn test_role_store_unauthorized_grant() {
     // This should panic because an unauthorized call to grant_role is attempted.
     let mut state = setup_role_store();
@@ -175,5 +175,43 @@ fn test_create_liquidation_order_short_position() {
     assert(created_order.order_type == OrderType::Liquidation, 'OrderType is not Liquidation');
     assert(
         created_order.acceptable_price == expected_acceptable_price, 'unexpected "acceptable_price"'
+    );
+}
+
+#[test]
+#[should_panic(expected: ('unauthorized_access',))]
+fn test_only_controller_can_create_liquidation_order() {
+    let (data_store, role_store, event_emitter, admin, market, collateral_token) =
+        _setup_liquidation();
+
+    let dummy_position = Position {
+        key: admin.into(),
+        account: admin,
+        market: market,
+        collateral_token: collateral_token,
+        size_in_usd: 2000,
+        size_in_tokens: 0,
+        collateral_amount: 0,
+        borrowing_factor: 0,
+        funding_fee_amount_per_size: 0,
+        long_token_claimable_funding_amount_per_size: 0,
+        short_token_claimable_funding_amount_per_size: 0,
+        increased_at_block: 0,
+        decreased_at_block: 0,
+        is_long: false,
+    };
+
+    let unauthorised_user = contract_address_const::<'uSER'>();
+
+    start_prank(data_store.contract_address, admin);
+    let position_key = position_utils::get_position_key(admin, market, collateral_token, false);
+    data_store.set_position(position_key, dummy_position);
+    stop_prank(data_store.contract_address);
+
+    start_prank(data_store.contract_address, unauthorised_user);
+    let nonce_key = create_liquidation_order(
+        data_store, event_emitter, admin, market, collateral_token, false
+    );
+    stop_prank(data_store.contract_address);
     );
 }
