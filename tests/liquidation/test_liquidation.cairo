@@ -7,8 +7,8 @@ use satoru::position::position::Position;
 use satoru::position::position_utils;
 use satoru::role::role;
 use satoru::role::role_store::{
-    IRoleStoreDispatcher, IRoleStoreDispatcherTrait, RoleStore::InternalFunctionsTrait, 
-    RoleStore, IRoleStore
+    IRoleStoreDispatcher, IRoleStoreDispatcherTrait, RoleStore::InternalFunctionsTrait, RoleStore,
+    IRoleStore
 };
 use snforge_std::{declare, start_prank, stop_prank};
 use snforge_std::cheatcodes::contract_class::{ContractClass, ContractClassTrait};
@@ -22,8 +22,7 @@ use traits::Default;
 
 fn deploy_contract(name: felt252, calldata: Array<felt252>) -> ContractAddress {
     let contract = declare(name);
-    let contract_address = contract.deploy(@calldata)
-        .expect('failed deploying contract');
+    let contract_address = contract.deploy(@calldata).expect('failed deploying contract');
     contract_address
 }
 
@@ -53,7 +52,14 @@ fn _setup() -> (IDataStoreDispatcher, IRoleStoreDispatcher, IEventEmitterDispatc
 
 /// Convenience helper for tests that need additional parameters.
 /// Returns the deployed contracts along with common account addresses.
-fn _setup_liquidation() -> (IDataStoreDispatcher, IRoleStoreDispatcher, IEventEmitterDispatcher, ContractAddress, ContractAddress, ContractAddress) {
+fn _setup_liquidation() -> (
+    IDataStoreDispatcher,
+    IRoleStoreDispatcher,
+    IEventEmitterDispatcher,
+    ContractAddress,
+    ContractAddress,
+    ContractAddress
+) {
     let (data_store, role_store, event_emitter) = _setup();
     let admin: ContractAddress = contract_address_const::<'ADMIN'>();
     let market: ContractAddress = contract_address_const::<'MARKET'>();
@@ -69,10 +75,7 @@ fn _setup_liquidation() -> (IDataStoreDispatcher, IRoleStoreDispatcher, IEventEm
 fn setup_role() {
     let admin: ContractAddress = contract_address_const::<'ADMIN'>();
     let state = setup_role_store();
-    assert(
-        state.has_role(admin, role::ROLE_ADMIN),
-        'Admin should have admin role'
-    );
+    assert(state.has_role(admin, role::ROLE_ADMIN), 'Admin should have admin role');
 }
 
 #[test]
@@ -87,13 +90,11 @@ fn test_role_store_unauthorized_grant() {
 
 #[test]
 fn test_create_liquidation_order() {
-    let (data_store, role_store, event_emitter, admin, market, collateral_token) = _setup_liquidation();
+    let (data_store, role_store, event_emitter, admin, market, collateral_token) =
+        _setup_liquidation();
 
     let local_role_state = setup_role_store();
-    assert(
-        local_role_state.has_role(admin, role::ROLE_ADMIN),
-        'Admin should have admin role'
-    );
+    assert(local_role_state.has_role(admin, role::ROLE_ADMIN), 'Admin should have admin role');
 
     let dummy_position = Position {
         key: admin.into(),
@@ -117,18 +118,11 @@ fn test_create_liquidation_order() {
     role_store.grant_role(admin, role::CONTROLLER);
     stop_prank(role_store.contract_address);
 
-    
-    
     start_prank(data_store.contract_address, admin);
     let position_key = position_utils::get_position_key(admin, market, collateral_token, true);
     data_store.set_position(position_key, dummy_position);
     let nonce_key = create_liquidation_order(
-        data_store,
-        event_emitter,
-        admin,
-        market,
-        collateral_token,
-        true 
+        data_store, event_emitter, admin, market, collateral_token, true
     );
     stop_prank(data_store.contract_address);
 
@@ -141,7 +135,8 @@ fn test_create_liquidation_order() {
 fn test_create_liquidation_order_short_position() {
     // This test verifies that when creating a liquidation order for a short position,
     // the acceptable_price field is set to the maximum value.
-    let (data_store, role_store, event_emitter, admin, market, collateral_token) = _setup_liquidation();
+    let (data_store, role_store, event_emitter, admin, market, collateral_token) =
+        _setup_liquidation();
 
     let dummy_position = Position {
         key: admin.into(),
@@ -164,7 +159,6 @@ fn test_create_liquidation_order_short_position() {
     role_store.grant_role(admin, role::CONTROLLER);
     stop_prank(role_store.contract_address);
 
-    
     start_prank(data_store.contract_address, admin);
     let position_key = position_utils::get_position_key(admin, market, collateral_token, false);
     data_store.set_position(position_key, dummy_position);
@@ -172,23 +166,14 @@ fn test_create_liquidation_order_short_position() {
 
     start_prank(data_store.contract_address, admin);
     let nonce_key = create_liquidation_order(
-        data_store,
-        event_emitter,
-        admin,
-        market,
-        collateral_token,
-        false
+        data_store, event_emitter, admin, market, collateral_token, false
     );
     stop_prank(data_store.contract_address);
 
     let created_order = data_store.get_order(nonce_key);
     let expected_acceptable_price = BoundedInt::<u256>::max();
+    assert(created_order.order_type == OrderType::Liquidation, 'OrderType is not Liquidation');
     assert(
-        created_order.order_type == OrderType::Liquidation,
-        'OrderType is not Liquidation'
-    );
-    assert(
-        created_order.acceptable_price == expected_acceptable_price,
-        'unexpected "acceptable_price"'
+        created_order.acceptable_price == expected_acceptable_price, 'unexpected "acceptable_price"'
     );
 }

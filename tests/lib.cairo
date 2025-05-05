@@ -1,11 +1,12 @@
 #[cfg(test)]
-mod chain {
-    mod test_chain;
+mod bank {
+    mod test_bank;
+    mod test_strict_bank;
 }
 
 #[cfg(test)]
-mod role {
-    mod role_test;
+mod chain {
+    mod test_chain;
 }
 
 #[cfg(test)]
@@ -14,16 +15,20 @@ mod config {
 }
 
 #[cfg(test)]
-mod bank {
-    mod test_bank;
-    mod test_strict_bank;
-}
-
-#[cfg(test)]
 mod deposit {
     mod test_deposit;
     mod test_deposit_utils;
-    mod test_deposit_vault; 
+    mod test_deposit_vault;
+}
+
+#[cfg(test)]
+mod gas {
+    mod test_gas_utils;
+}
+
+#[cfg(test)]
+mod liquidation {
+    mod test_liquidation;
 }
 
 #[cfg(test)]
@@ -37,10 +42,9 @@ mod referral {
 }
 
 #[cfg(test)]
-mod liquidation {
-    mod test_liquidation;
+mod role {
+    mod role_test;
 }
-
 
 #[cfg(test)]
 mod withdrawal {

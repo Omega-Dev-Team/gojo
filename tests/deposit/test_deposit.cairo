@@ -6,10 +6,10 @@ use satoru::deposit::deposit::{Deposit, DefaultDeposit};
 #[test]
 fn test_deposit_default_values() {
     let deposit = DefaultDeposit::default();
-    
+
     // Test key
     assert(deposit.key == 0, 'key should be 0');
-    
+
     // Test addresses
     assert(deposit.account == contract_address_const::<0>(), 'wrong account');
     assert(deposit.receiver == contract_address_const::<0>(), 'wrong receiver');
@@ -18,12 +18,12 @@ fn test_deposit_default_values() {
     assert(deposit.market == contract_address_const::<0>(), 'wrong market');
     assert(deposit.initial_long_token == contract_address_const::<0>(), 'wrong long token');
     assert(deposit.initial_short_token == contract_address_const::<0>(), 'wrong short token');
-    
+
     // Test amounts
     assert(deposit.initial_long_token_amount == 0, 'wrong long amount');
     assert(deposit.initial_short_token_amount == 0, 'wrong short amount');
     assert(deposit.min_market_tokens == 0, 'wrong min tokens');
-    
+
     // Test other values
     assert(deposit.updated_at_block == 0, 'wrong block');
     assert(deposit.execution_fee == 0, 'wrong execution fee');
